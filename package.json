@@ -1,0 +1,14 @@
+{
+  "name": "makegraphswithelectron",
+  "version": "1.0.0",
+  "description": "Visual application to manage graphs with javascript",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Guilherme Rocha",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.8.2"
+  }
+}
