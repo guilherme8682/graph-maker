@@ -38,7 +38,7 @@ module.exports = class Graph{
         }
     }
     setInformation(index, name){
-        this.vertices[index].name = name
+        this.vertices[index].setName(name)
     }    
     printAdjacencys(){
         console.log('Adjacencys:')
@@ -49,7 +49,7 @@ module.exports = class Graph{
     }
     printVertices(){
         console.log('Vertices:')
-        this.vertices.forEach((vertice, index) => console.log('index:',index,'name:',vertice.name))
+        this.vertices.forEach((vertice, index) => console.log('index:',index,'name:',vertice.getName()))
     }
     dijkstra(s, t, callback){
         var MEMBRO = true

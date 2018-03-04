@@ -5,11 +5,17 @@
     <style>
         body{
             background-color: PaleTurquoise;
-            color:  rgb(255, 255, 255)
+            color:  rgba(255, 255, 255, 0.966)
         }
         canvas{
-            float: right;
-        }
+			position: absolute;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			margin: auto;		
+		}
+	
     </style>
 </head>
 <body>
@@ -19,6 +25,10 @@
 <script>
     const Map = require('./Map')
     var canvas = document.getElementById('graphViewer')
-    var map = new Map(canvas, 100)    
+    var map = new Map(canvas, 121)
+
+    window.addEventListener('resize', () => {
+        map.resizeScreen()
+    })
 </script>
 </html>

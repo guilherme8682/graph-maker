@@ -4,22 +4,40 @@ module.exports = class Map{
     constructor(canvas, size){
         this.canvas = canvas
         this.context = canvas.getContext('2d')
-        canvas.height = 600
-        canvas.width = 600
         this.numberOfBlocks = size
+        this.currentSearch = {method: null, from: null, to: null}
+        
+        this.resizeScreen(true)
+        this.makeMapGraph()
+        this.drawMap()
+    }
+    resizeScreen(fristTime){
+        var height = window.innerHeight,
+            width = window.innerWidth,
+            resolution = height < width ? height : width
+        
+        this.canvas.height = resolution
+        this.canvas.width = resolution
         this.numberOfBlocksPerLine = Math.ceil(Math.sqrt(this.numberOfBlocks))
         this.blockSize = {
             x:  canvas.width / this.numberOfBlocksPerLine,
             y: canvas.height / this.numberOfBlocksPerLine
         }
-        this.makeMapGraph()
+        if(fristTime)
+            return
         this.drawMap()
+        if(this.currentSearch.method)
+            this.currentSearch.method(this.currentSearch.from, this.currentSearch.to)
     }
     searchWithDijkstra(from, to){
+        this.drawMap()
         this.graph.dijkstra(from, to, (rota, visitados) => {
             this.drawBlocks(visitados)
             this.drawRoute(rota)
         })
+        this.currentSearch.method = this.searchWithDijkstra.bind(this)
+        this.currentSearch.from = from
+        this.currentSearch.to = to
     }
     drawBlocks(list){
         if(!list)
@@ -27,7 +45,7 @@ module.exports = class Map{
         console.log(list)
         list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)'))
     }
-    drawRoute(list){        
+    drawRoute(list){
         var current = {
             x: (list[0] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
             y: (Math.floor(list[0] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
@@ -42,7 +60,7 @@ module.exports = class Map{
                 x: (list[i] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
                 y: (Math.floor(list[i] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
             }
-            this.context.lineTo(current.x, current.y)            
+            this.context.lineTo(current.x, current.y)
         }        
         this.context.stroke()
     }
@@ -103,11 +121,10 @@ module.exports = class Map{
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
             }        
         }
-
     }
     drawBackGround(){
         this.context.fillStyle = 'PaleTurquoise'
-        this.context.fillRect(0,0, 600, 600)
+        this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
     }
     drawMap(){
         this.drawBackGround()
