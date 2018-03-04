@@ -94,5 +94,6 @@ module.exports = class Graph{
             i = caminho[i]
         }
         return result;
+ 
     }
 }

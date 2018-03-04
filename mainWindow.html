@@ -3,6 +3,9 @@
 <head>
     <title>MakeGraphsWithElectron</title>
     <style>
+        body{
+            background-color: PaleTurquoise;
+        }
         canvas{
             float: right;
         }
@@ -15,6 +18,6 @@
 <script>
     const Map = require('./Map')
     var canvas = document.getElementById('graphViewer')
-    var map = new Map(canvas)    
+    var map = new Map(canvas, 121)    
 </script>
 </html>
