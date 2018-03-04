@@ -51,7 +51,7 @@ module.exports = class Graph{
         console.log('Vertices:')
         this.vertices.forEach((vertice, index) => console.log('index:',index,'name:',vertice.name))
     }
-    dijkstra(s, t){
+    dijkstra(s, t, callback){
         var MEMBRO = true
         var NAOMEMBRO = false
         var caminho = new Array(this.size)
@@ -87,13 +87,21 @@ module.exports = class Graph{
             }
             corrente = k;
             perm[corrente] = MEMBRO;
-        }        
-        var i = t, result = [t]
+        }
+        
+        //Tratando resultados
+        var i = t, rota = [t]
         while(i != s){
-            result.unshift(caminho[i])
+            rota.unshift(caminho[i])
             i = caminho[i]
         }
-        return result;
- 
+        var visitados = []
+        perm.forEach( (item, index) => {
+            if(item)
+                visitados.push(index)
+        })
+        callback(rota, visitados)
+
+        return caminho; 
     }
 }

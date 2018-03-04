@@ -6,21 +6,26 @@ module.exports = class Map{
         this.context = canvas.getContext('2d')
         canvas.height = 600
         canvas.width = 600
-
         this.numberOfBlocks = size
         this.numberOfBlocksPerLine = Math.sqrt(this.numberOfBlocks)
         this.blockSize = {
             x:  canvas.width / this.numberOfBlocksPerLine,
             y: canvas.height / this.numberOfBlocksPerLine
         }
-
         this.makeMapGraph()
         this.drawBackGround()
         this.drawMap()
-        this.drawRout(this.graph.dijkstra(0, 4))
-
+        this.graph.dijkstra(51, 58, (rota, visitados) => {
+            this.drawBlocks(visitados)
+            this.drawRoute(rota)
+        })
     }
-    drawRout(list){
+    drawBlocks(list){
+        if(!list)
+            return
+        list.forEach(item => this.drawSquare(item, 'DarkOrange'))
+    }
+    drawRoute(list){
         list.forEach((item, index, list) => this.traceLine(list[index], list[index + 1]))
     }
     traceLine(from, to){
@@ -97,29 +102,27 @@ module.exports = class Map{
     drawBackGround(){
         this.context.fillStyle = 'PaleTurquoise'
         this.context.fillRect(0,0, 600, 600)
-    }  
-    drawSquare(context, rectX, rectY, rectWidth, rectHeight, color){
-        var cornerRadius = 20;
-        context.fillStyle = color
-        context.strokeStyle = color
-        context.lineJoin = "round";
-        context.lineWidth = cornerRadius;
-        context.strokeRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
-        context.fillRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
     }
     drawMap(){
-        var color = 'RoyalBlue'
-        var rectX = this.blockSize.x * 0.05
-        var rectY = this.blockSize.y * 0.05
+        for(var i = 0; i < this.numberOfBlocks; ++i)
+            this.drawSquare(i,'RoyalBlue')
+    }
+    drawSquare(index, color){
+        var origin = {
+            x: (index % this.numberOfBlocksPerLine * this.blockSize.x),
+            y: (Math.floor(index / this.numberOfBlocksPerLine) * this.blockSize.y)
+        }
+        var rectX = this.blockSize.x * 0.05 + origin.x
+        var rectY = this.blockSize.y * 0.05 + origin.y
         var rectWidth = this.blockSize.x * 0.9
         var rectHeight = this.blockSize.y * 0.9
 
-        for(var i = 0; i < this.numberOfBlocksPerLine; i++){
-            rectY = this.blockSize.y * 0.05 + i * this.blockSize.y
-            for(var j = 0; j < this.numberOfBlocksPerLine; j++){
-                rectX = this.blockSize.x * 0.05 + j * this.blockSize.x
-                this.drawSquare(this.context, rectX, rectY, rectWidth, rectHeight, color)
-            }
-        }
+        var cornerRadius = 20;
+        this.context.fillStyle = color
+        this.context.strokeStyle = color
+        this.context.lineJoin = "round";
+        this.context.lineWidth = cornerRadius;
+        this.context.strokeRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
+        this.context.fillRect(rectX+(cornerRadius/2), rectY+(cornerRadius/2), rectWidth-cornerRadius, rectHeight-cornerRadius);
     }
 }
