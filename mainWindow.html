@@ -4,11 +4,17 @@
     <title>MakeGraphsWithElectron</title>
     <style>
         canvas{
-            border: 1px solid black;
+            float: right;
         }
     </style>
 </head>
 <body>
     <canvas id="graphViewer"></canvas>
 </body>
+
+<script>
+    const Map = require('./Map')
+    var canvas = document.getElementById('graphViewer')
+    var map = new Map(canvas)    
+</script>
 </html>
