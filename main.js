@@ -6,7 +6,8 @@ const { app, BrowserWindow, Menu } = electron
 let mainWindows
 
 app.on('ready', () => {
-    mainWindow = new BrowserWindow({width: 1000, height: 648, resizable: true})
+    
+    mainWindow = new BrowserWindow({width: 980, height: 660, resizable: true})
 
     mainWindow.loadURL( url.format({
         pathname: path.join(__dirname, 'mainWindow.html'),
@@ -14,7 +15,7 @@ app.on('ready', () => {
         slashes: true
     }))
 
-    mainWindow.openDevTools()
+    //mainWindow.openDevTools()
     Menu.setApplicationMenu(null)
 
 })

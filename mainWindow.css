@@ -1,0 +1,80 @@
+
+html, body{
+    background-color: PaleTurquoise;
+    margin: 0;
+    height: 100%;
+    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto Slab', serif;
+    min-width: 960px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+p, select, button, input{
+    width: 100%;
+    outline: none;
+    height: 28px;
+    border: 0;
+    border-radius: 2px;
+}
+select, button{            
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.material-icons{
+    font-size: 23px;
+}
+h2{
+    font-size: 26px;
+}
+p{
+    margin: 0;
+}
+button{
+    color: white;
+    border-radius: 6px;
+    background-color: Crimson;
+}
+button:active{
+    background-color: white;
+}
+.option{
+    margin: 10%;
+    width: 80%;
+}
+#controllerContainer{
+    float: left;
+    background-color: peru;
+    height: 100%;
+    width: 250px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+#canvasContainer{
+    min-width: 600px;
+    height: 100%;
+    float: right;
+    width: calc(100% - 260px);
+}
+canvas{            
+    position: relative;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+input[type='range'] {
+    -webkit-appearance: none !important;
+    height:7px;
+}
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background:Crimson;
+    border-radius: 15px;
+    height:25px;
+    width:25px;
+}

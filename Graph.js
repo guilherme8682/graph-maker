@@ -1,3 +1,5 @@
+var fs = require('fs')
+
 module.exports = class Graph{
     constructor(size, directed){
         this.directed = directed
@@ -104,4 +106,63 @@ module.exports = class Graph{
 
         return caminho; 
     }
+    savePajek(fileName){
+        var data = ''
+        
+        data += '*Vertices  ' + this.size + '\n';
+        this.vertices.forEach((vertice, index) =>{
+            data += (index + 1) + ' "' + vertice.getName() + '"\n'
+        })
+        if (this.directed) {
+            data += '*Arcs \n'
+            for (var i = 0; i < this.size; i++)
+            {
+                for (var j = 0; j < this.size; j++)
+                {
+                    if (this.matrix[i][j] != Infinity)
+                    {
+                        data += (i + 1) + ' ' + (j + 1) + ' ' + this.matrix[i][j] + '\n'
+                    }
+                }
+            }
+        }
+        else {
+            data += '*Edges \n'
+            for (var i = 0; i < this.size; i++)
+            {
+                for (var j = i; j < this.size; j++)
+                {
+                    if (this.matrix[i][j] != Infinity)
+                    {
+                        data += (i + 1) + ' ' + (j + 1) + ' ' + this.matrix[i][j] + '\n'
+                    }
+                }
+            }
+        }
+        fs.writeFileSync(__dirname + '/' + fileName + '.net', data)
+    }
+    loadPajek(fileName){
+        /*let data = fs.readFileSync(__dirname + '/' + fileName + '.net', 'utf8').split('\n')        
+        this.size = Number(data[0].match(/\d+/)[0])
+        
+        for(let currentLine  = 1; currentLine < data.lenght; ++currentLine){
+            if(data[currentLine][0] == '*')
+                break
+            data[currentLine].split(' ')
+        }
+
+
+        
+        
+        
+        
+        
+        
+        console.log(this.size)*/
+    }
 }
+
+/*var a = new Graph(8, true)
+
+a.loadPajek('test')*/
+

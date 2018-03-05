@@ -5,16 +5,22 @@ module.exports = class Map{
         this.canvas = canvas
         this.context = canvas.getContext('2d')
         this.numberOfBlocks = size
-        this.currentSearch = {method: null, from: null, to: null}
         
-        this.resizeScreen(true)
+        this.currentSearch = null
+        this.currentDrawing = this.setBeginPoint.bind(this)
+        this.originPoint = 0
+        this.destinyPoint = size - 1
+
+        this.refreshScreen(true)
         this.makeMapGraph()
         this.drawMap()
     }
-    resizeScreen(fristTime){
-        var height = window.innerHeight,
-            width = window.innerWidth,
+    refreshScreen(fristTime){
+        var height = window.innerHeight - 5,
+            width = window.innerWidth - 300,
             resolution = height < width ? height : width
+        if(resolution < 600)
+            resolution = 600
         
         this.canvas.height = resolution
         this.canvas.width = resolution
@@ -26,23 +32,20 @@ module.exports = class Map{
         if(fristTime)
             return
         this.drawMap()
-        if(this.currentSearch.method)
-            this.currentSearch.method(this.currentSearch.from, this.currentSearch.to)
+        if(this.currentSearch)
+            this.currentSearch(this.currentSearch.from, this.currentSearch.to)
     }
-    searchWithDijkstra(from, to){
+    searchWithDijkstra(){
         this.drawMap()
-        this.graph.dijkstra(from, to, (rota, visitados) => {
+        this.graph.dijkstra(this.originPoint, this.destinyPoint, (rota, visitados) => {
             this.drawBlocks(visitados)
             this.drawRoute(rota)
         })
-        this.currentSearch.method = this.searchWithDijkstra.bind(this)
-        this.currentSearch.from = from
-        this.currentSearch.to = to
+        this.currentSearch = this.searchWithDijkstra.bind(this)
     }
     drawBlocks(list){
         if(!list)
             return
-        console.log(list)
         list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)'))
     }
     drawRoute(list){
@@ -132,7 +135,9 @@ module.exports = class Map{
         for(var i = 0; i < this.numberOfBlocks; ++i){
             let nColor = Math.floor((100 - this.costVertices[i]) / 100 * 255)
             this.drawSquare(i,'rgb(255,' + nColor + ',' + nColor + ')')
-        }
+        }        
+        this.drawSquare(this.originPoint, 'LawnGreen')
+        this.drawSquare(this.destinyPoint, 'DodgerBlue')
     }
     drawSquare(index, color){
         var origin = {
@@ -143,7 +148,7 @@ module.exports = class Map{
         var y = this.blockSize.y * 0.05 + origin.y
         var w = this.blockSize.x * 0.9
         var h = this.blockSize.y * 0.9
-        var r = this.blockSize.x / 3
+        var r = this.blockSize.x / 5
         this.context.fillStyle = color
         this.context.strokeStyle = color
         this.context.beginPath(); 
@@ -157,5 +162,34 @@ module.exports = class Map{
         this.context.lineTo(x, y+r);
         this.context.quadraticCurveTo(x, y, x+r, y);
         this.context.fill();        
+    }
+    setBeginPoint(click){
+        this.originPoint = this.indexFromClick(click)
+        this.refreshScreen()
+    }
+    setDestinyPoint(click){        
+        this.destinyPoint = this.indexFromClick(click)
+        this.refreshScreen()
+    }
+    indexFromClick(click){
+        return Math.floor(click.offsetX / this.blockSize.x) + Math.floor(click.offsetY / this.blockSize.y) * this.numberOfBlocksPerLine
+    }
+    activeSearchMethod(name){
+        if(name == 'dijkstra'){
+            this.currentSearch = this.searchWithDijkstra.bind(this)
+        }
+        this.refreshScreen()
+    }
+    activeDrawingMethod(name){
+        if(name == 'beginPoint')
+            this.currentDrawing = this.setBeginPoint.bind(this)
+        else if(name == 'destinyPoint')
+            this.currentDrawing = this.setDestinyPoint.bind(this)
+        else if(name == 'obstacle')
+            this.currentDrawing = null//this.setBeginPoint.bind(this)        
+    }
+    clickEvent(click){
+        if(this.currentDrawing)
+            this.currentDrawing(click)
     }
 }

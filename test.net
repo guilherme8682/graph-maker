@@ -1,0 +1,19 @@
+*Vertices  8
+1 "Actor 1"
+2 "Actor 2"
+3 "Actor 3"
+4 "Event 1"
+5 "Event 2"
+6 "Event 3"
+7 "Event 4"
+8 "Event 5"
+*Edges 
+1 4 10
+1 5 4
+2 4 3
+2 5 5
+2 6 8
+2 8 12
+3 4 11
+3 7 2
+3 8 7

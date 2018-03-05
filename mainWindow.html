@@ -2,33 +2,64 @@
 <html lang="pt">
 <head>
     <title>MakeGraphsWithElectron</title>
-    <style>
-        body{
-            background-color: PaleTurquoise;
-            color:  rgba(255, 255, 255, 0.966)
-        }
-        canvas{
-			position: absolute;
-			top: 0px;
-			bottom: 0px;
-			left: 0px;
-			right: 0px;
-			margin: auto;		
-		}
-	
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Roboto+Slab" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="mainWindow.css">
 </head>
 <body>
-    <canvas id="graphViewer"></canvas>
+    <div id='controllerContainer'>
+        <div class="option">
+            <h2><i class="material-icons">settings</i>
+            Options</h2>
+        </div>
+        <div class="option">
+            <p>Search method:</p>
+            <select id="SearchMethod">
+                <option selected value="dijkstra">Dijkstra</option>
+            </select>
+        </div>
+        
+        <div class="option" id="find">
+            <button>Find</button>
+        </div>
+        <div class="option">
+            <p>Drawing method:</p>
+            <select id="drawingMethod">
+                <option selected value="beginPoint">Begin point</option>
+                <option value="destinyPoint">Destiny point</option>
+                <option value="obstacle">Obstacle</option>
+            </select>
+        </div>
+        <div class="option" hidden="true">
+            <p>Obstacle intensity:</p>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
+    </div>    
+    <div id="canvasContainer">
+        <canvas id="graphViewer"></canvas>
+    </div>
 </body>
-
 <script>
     const Map = require('./Map')
     var canvas = document.getElementById('graphViewer')
     var map = new Map(canvas, 121)
 
     window.addEventListener('resize', () => {
-        map.resizeScreen()
+        map.refreshScreen()
     })
+    var searchMethod = document.getElementById('SearchMethod')
+    document.getElementById('find').addEventListener('click',() => {
+        map.activeSearchMethod(searchMethod.value)
+    })
+    var drawingMethod = document.getElementById('drawingMethod')
+    drawingMethod.addEventListener('change', () => {
+        map.activeDrawingMethod(drawingMethod.value)
+    })
+    canvas.addEventListener('click', (click) => {
+        map.clickEvent(click)
+    })
+    
+
+    
 </script>
 </html>
