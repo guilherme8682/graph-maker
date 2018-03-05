@@ -145,10 +145,14 @@ module.exports = class Graph{
         /*let data = fs.readFileSync(__dirname + '/' + fileName + '.net', 'utf8').split('\n')        
         this.size = Number(data[0].match(/\d+/)[0])
         
+        let line = ''
         for(let currentLine  = 1; currentLine < data.lenght; ++currentLine){
             if(data[currentLine][0] == '*')
                 break
-            data[currentLine].split(' ')
+            console.log(data[currentLine])
+            line = data[currentLine].split(' ')
+
+            this.vertices[Number(line[0])].setName(line[1].substr(1,line[1].length))
         }
 
 
@@ -158,7 +162,7 @@ module.exports = class Graph{
         
         
         
-        console.log(this.size)*/
+        //console.log(this.vertices)*/
     }
 }
 
