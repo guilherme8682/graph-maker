@@ -154,8 +154,7 @@ module.exports = class Graph{
             data = fs.readFileSync(fileName + '.net', 'utf8').split('\n')
         } 
         catch (error) {
-            console.log(error)
-            return
+            throw error
         }
 
 
@@ -204,6 +203,3 @@ module.exports = class Graph{
         }
     }
 }
-
-/*var a = new Graph('maze225')
-a.printAdjacencys()*/

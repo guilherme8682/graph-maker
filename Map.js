@@ -90,15 +90,12 @@ module.exports = class Map{ // Overload: new Map(canvas:Canvas, size:Number), ne
             let data = JSON.parse(dataJson)
             this.name = data.name            
             this.originPoint = data.origin
-            this.destinyPoint = data.destiny
+            this.destinyPoint = data.destiny            
+            this.graph = new Graph(fileName)
         } 
         catch (error) {
-            console.log(error)
+            throw error
         }
-        this.graph = new Graph(fileName)
-
-        if(!this.graph.size)
-            return
 
         this.numberOfBlocks = this.graph.size
         this.costVertices = []

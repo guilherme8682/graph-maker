@@ -28,11 +28,46 @@ html, body{
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 #navBar{
+    padding: 5px;
+}
+.navButton{
+    height: 50px;
+    width: 50px;
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);  
+
+    display: table;
+}
+.navButton i{
+
+    font-size: 40px;
+    color: white;
+    transition: all 0.1s cubic-bezier(.25,.8,.25,1);
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+.navButton i:hover{
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
+}
+.navButton i:active{
+    font-size: 25px;
+    transition: all 0.1s cubic-bezier(.25,.8,.25,1);
+}
+
+.navInput {
+    height: 50px;
+    margin: 0 20px 0 20px;
+    
+}
+
+#navBar{
     background-color: Peru;
     height: 60px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
-input[type="text"]{    
+input[type="text"]{
     font-family: 'Open Sans', sans-serif;
     font-family: 'Roboto', sans-serif;
     font-family: 'Roboto Slab', serif;
@@ -46,20 +81,7 @@ input[type="text"]{
 #navBar input[type="text"]::placeholder{
     color: LightGray;
 }
-#navBar i{
-    margin: 8px;
-    font-size: 40px;
-    color: white;
-    transition: all 0.2s cubic-bezier(.25,.8,.25,1);
-}
-#navBar i:active{
-    font-size: 35px;
-    transition: all 0.1s cubic-bezier(.25,.8,.25,1);
-}
-.navBarOption{
-    margin-left: 20px;
-    min-width: 60px;
-}
+
 p, select, button, input{
     width: 100%;
     outline: none;

@@ -8,17 +8,17 @@
 </head>
 <body>
     <div id="navBar">
-        <div class="navBarOption left">
+        <div class="navButton left">
             <i id="saveButton" class="material-icons">save</i>
         </div>
-        <div class="navBarOption left">
+        <div class="navInput left">
             <input id="mapNameField" placeholder="Choose a name" type="text" spellcheck="false">
         </div>
-        <div class="navBarOption right">
+        <div class="navButton right">
                 <i id="readButton" class="material-icons">folder_open</i>
         </div>
-        <div class="navBarOption right">
-            <input id="fileNameToOpenField" placeholder="Choose a file name to open" hidden="true" type="text" spellcheck="false">
+        <div class="navInput right">
+            <input id="fileNameToOpenField" placeholder="Put the file name to open" hidden="true" type="text" spellcheck="false">
         </div>
     </div>
     <div id='controllerContainer'>
@@ -56,18 +56,17 @@
 <script>
     const Map = require('./Map')
     let canvas = document.getElementById('graphViewer')
-    let map = new Map(canvas, 'maze225')
-
+    let map = {}
+    openMapFromFile('maze225')
     function openMapFromFile(fileName){
-        let aux = new Map(canvas, fileName)
-        if(!aux.graph.size){
-            alert('Arquivo não encontrado')
-            return
-        }   
-        else{
-            map = aux
+        try {
+            map = new Map(canvas, fileName)
             document.getElementById('mapNameField').value = map.name
             document.getElementById('fileNameToOpenField').value = ''
+        }
+        catch (error) {
+            alert('Arquivo não encontrado')
+            console.log(error)
         }
     }
 
@@ -140,7 +139,7 @@
             mapNameField.hidden = true
         }
         else{
-            if(fileNameToOpenField.value.search(/[\/\:*?"<>|]/g) == -1 && fileNameToOpenField.value != ''){
+            if(fileNameToOpenField.value != ''){
                 openMapFromFile(fileNameToOpenField.value)
                 fileNameToOpenField.hidden = true
                 mapNameField.hidden = false
