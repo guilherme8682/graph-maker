@@ -56,7 +56,7 @@
 <script>
     const Map = require('./Map')
     let canvas = document.getElementById('graphViewer')
-    let map = new Map(canvas, 2500)
+    let map = new Map(canvas, 'maze225')
 
     function openMapFromFile(fileName){
         let aux = new Map(canvas, fileName)
