@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <title>MakeGraphsWithElectron</title>
+    <title>Make graphs with Electron</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Roboto+Slab" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="mainWindow.css">
 </head>
 <body>
+    <div id="navBar">
+        <div class="navBarOption left">
+            <i id="saveButton" class="material-icons">save</i>
+        </div>
+        <div class="navBarOption left">
+            <input id="mapNameField" placeholder="Choose a name" type="text" spellcheck="false">
+        </div>
+        <div class="navBarOption right">
+                <i id="readButton" class="material-icons">folder_open</i>
+        </div>
+        <div class="navBarOption right">
+            <input id="fileNameToOpenField" placeholder="Choose a file name to open" hidden="true" type="text" spellcheck="false">
+        </div>
+    </div>
     <div id='controllerContainer'>
         <div class="option">
             <h2><i class="material-icons">settings</i>
@@ -41,14 +55,27 @@
 </body>
 <script>
     const Map = require('./Map')
-    var canvas = document.getElementById('graphViewer')
-    var map = new Map(canvas, 2500)
+    let canvas = document.getElementById('graphViewer')
+    let map = new Map(canvas, 2500)
+
+    function openMapFromFile(fileName){
+        let aux = new Map(canvas, fileName)
+        if(!aux.graph.size){
+            alert('Arquivo não encontrado')
+            return
+        }   
+        else{
+            map = aux
+            document.getElementById('mapNameField').value = map.name
+            document.getElementById('fileNameToOpenField').value = ''
+        }
+    }
 
     window.addEventListener('resize', () => {
         map.refreshScreen()
     })
-    var searchMethod = document.getElementById('SearchMethod')
-    var buttonFind = document.getElementById('find')
+    let searchMethod = document.getElementById('SearchMethod')
+    let buttonFind = document.getElementById('find')
     buttonFind.addEventListener('click',() => {
 
         if(buttonFind.innerText == 'Find'){
@@ -60,7 +87,7 @@
             buttonFind.innerText = 'Find'
         }
     })
-    var drawingMethod = document.getElementById('drawingMethod')
+    let drawingMethod = document.getElementById('drawingMethod')
     drawingMethod.addEventListener('change', () => {
         map.activeDrawingMethod(drawingMethod.value)
         if(drawingMethod.value == 'obstacle')
@@ -71,9 +98,63 @@
     canvas.addEventListener('click', (click) => {
         map.clickEvent(click)
     })
-    var obstacleIntensity = document.getElementById('obstacleIntensity')
+    let obstacleIntensity = document.getElementById('obstacleIntensity')
     obstacleIntensity.addEventListener('change', () =>{
-        map.setObstacleIntensity(obstacleIntensity.value)
+        map.setObstacleIntensity(Number(obstacleIntensity.value))
     })
+    let mapNameField = document.getElementById('mapNameField')
+    let fileNameToOpenField = document.getElementById('fileNameToOpenField')
+    
+    
+    function saveFile(){
+        if(mapNameField.hidden){
+            mapNameField.hidden = false
+            fileNameToOpenField.hidden = true
+        }
+        else{
+            if(mapNameField.value == ''){
+                alert('You must choose a name!')
+                return
+            }
+            let fileName = mapNameField.value.replace(/[^a-zA-Z ]/g, '')
+            if(fileName == ''){
+                alert('You must choose another name!')
+                mapNameField.value = ''
+                return
+            }
+            map.saveMap(fileName,mapNameField.value)
+            alert('Map save as "' + fileName + '.net" and "' + fileName + '.json"')
+            mapNameField.hidden = true
+            fileNameToOpenField.hidden = false
+        }        
+    }    
+    mapNameField.addEventListener('keypress', (button) => {
+        let char = button.char || button.charCode || button.which;
+        if(char == 13)
+        saveFile()
+    })
+    document.getElementById('saveButton').addEventListener('click', saveFile) 
+    function openFile(){
+        if(fileNameToOpenField.hidden){
+            fileNameToOpenField.hidden = false
+            mapNameField.hidden = true
+        }
+        else{
+            if(fileNameToOpenField.value.search(/[\/\:*?"<>|]/g) == -1 && fileNameToOpenField.value != ''){
+                openMapFromFile(fileNameToOpenField.value)
+                fileNameToOpenField.hidden = true
+                mapNameField.hidden = false
+            }
+            else{
+                alert('File name not allowed!')
+            }
+        }
+    }    
+    fileNameToOpenField.addEventListener('keypress', (button) => {
+        let char = button.char || button.charCode || button.which
+        if(char == 13) //13 == Enter
+            openFile()
+    })
+    document.getElementById('readButton').addEventListener('click', openFile)    
 </script>
 </html>

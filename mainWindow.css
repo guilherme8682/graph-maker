@@ -1,19 +1,64 @@
-
+.right{
+    float: right;
+}
+.left{
+    float: left;
+}
 html, body{
     background-color: PaleTurquoise;
     margin: 0;
     height: 100%;
+    overflow: hidden;
     font-family: 'Open Sans', sans-serif;
     font-family: 'Roboto', sans-serif;
     font-family: 'Roboto Slab', serif;
-    min-width: 960px;
+    min-width: 920px;
+    min-height: 740px;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    user-select: none;-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+#navBar{
+    background-color: Peru;
+    height: 60px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+input[type="text"]{    
+    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto Slab', serif;
+}
+#navBar input[type="text"]{
+    margin: 13px;
+    background-color: Peru;
+    color: white;
+    font-size: 25px;
+}
+#navBar input[type="text"]::placeholder{
+    color: LightGray;
+}
+#navBar i{
+    margin: 8px;
+    font-size: 40px;
+    color: white;
+    transition: all 0.2s cubic-bezier(.25,.8,.25,1);
+}
+#navBar i:active{
+    font-size: 35px;
+    transition: all 0.1s cubic-bezier(.25,.8,.25,1);
+}
+.navBarOption{
+    margin-left: 20px;
+    min-width: 60px;
 }
 p, select, button, input{
     width: 100%;
@@ -49,14 +94,14 @@ button:active{
 }
 #controllerContainer{
     float: left;
-    background-color: peru;
-    height: 100%;
+    background-color: Peru;
+    height: calc(100% - 60px);
     width: 250px;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 25px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 #canvasContainer{
-    min-width: 600px;
-    height: 100%;
+    min-width: 550px;
+    height: calc(100% - 80px);
     float: right;
     width: calc(100% - 260px);
 }

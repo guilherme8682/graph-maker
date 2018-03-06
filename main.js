@@ -7,7 +7,7 @@ let mainWindows
 
 app.on('ready', () => {
     
-    mainWindow = new BrowserWindow({width: 980, height: 660, resizable: true})
+    mainWindow = new BrowserWindow({width: 940, height: 740, resizable: true})
 
     mainWindow.loadURL( url.format({
         pathname: path.join(__dirname, 'mainWindow.html'),

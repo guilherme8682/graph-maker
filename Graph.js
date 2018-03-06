@@ -1,7 +1,15 @@
 var fs = require('fs')
 
 module.exports = class Graph{
-    constructor(size, directed){
+    constructor(size, directed){ //Overload: new Graph(path:String), new Graph(size:Number, directed:Boolean)
+        if(typeof size == 'string' && !directed)
+            this.loadPajek(size)
+        else if(typeof size == 'number' && typeof directed == 'boolean')
+            this.makeGraphBy(size, directed)
+        else
+            throw new Error('Missing parameter in Graph.')
+    }
+    makeGraphBy(size, directed){
         this.directed = directed
         this.size = size
 
@@ -54,57 +62,62 @@ module.exports = class Graph{
         this.vertices.forEach((vertice, index) => console.log('index:',index,'name:',vertice.getName()))
     }
     dijkstra(s, t, callback){
-        var MEMBRO = true
-        var NAOMEMBRO = false
-        var caminho = new Array(this.size)
-        var distancia = new Array(this.size)
-        var perm = new Array(this.size)
-        var corrente, k = s, dc, j = 0
-        var menordist, novadist
-        //inicialização
-        for (var i = 0; i < this.size; ++i) {
-            perm[i] = NAOMEMBRO
-            distancia[i] = Infinity
-            caminho[i] = -1
-        }
-        perm[s] = MEMBRO
-        distancia[s] = 0
-        corrente = s
-        while (corrente != t) {
-            menordist = Infinity
-            dc = distancia[corrente]
-            for (var i = 0; i < this.size; i++) {
-                if (!perm[i]) {
-                    novadist = dc + this.matrix[corrente][i]
-                    if (novadist < distancia[i]) {
+        try {
+            if(s < 0 || t >= this.size)
+                throw 'Unsupported values'
+            var MEMBRO = true
+            var NAOMEMBRO = false
+            var caminho = new Array(this.size)
+            var distancia = new Array(this.size)
+            var perm = new Array(this.size)
+            var corrente, k = s, dc, j = 0
+            var menordist, novadist
+            //inicialização
+            for (var i = 0; i < this.size; ++i) {
+                perm[i] = NAOMEMBRO
+                distancia[i] = Infinity
+                caminho[i] = -1
+            }
+            perm[s] = MEMBRO
+            distancia[s] = 0
+            corrente = s
+            while (corrente != t) {
+                menordist = Infinity
+                dc = distancia[corrente]
+                for (var i = 0; i < this.size; i++) {
+                    if (!perm[i]) {
+                        novadist = dc + this.matrix[corrente][i]
+                        if (novadist < distancia[i]) {
 
-                        distancia[i] = novadist
-                        caminho[i] = corrente
-                    }
-                    if (distancia[i] < menordist) {
-                        menordist = distancia[i]
-                        k = i;
+                            distancia[i] = novadist
+                            caminho[i] = corrente
+                        }
+                        if (distancia[i] < menordist) {
+                            menordist = distancia[i]
+                            k = i;
+                        }
                     }
                 }
+                corrente = k;
+                perm[corrente] = MEMBRO;
+            }            
+            //Tratando resultados
+            var i = t, rota = [t]
+            while(i != s){
+                rota.unshift(caminho[i])
+                i = caminho[i]
             }
-            corrente = k;
-            perm[corrente] = MEMBRO;
+            var visitados = []
+            perm.forEach( (item, index) => {
+                if(item)
+                    visitados.push(index)
+            })
+            callback(rota, visitados)
+            return caminho
         }
-        
-        //Tratando resultados
-        var i = t, rota = [t]
-        while(i != s){
-            rota.unshift(caminho[i])
-            i = caminho[i]
+        catch (error) {
+            throw(new Error(error))
         }
-        var visitados = []
-        perm.forEach( (item, index) => {
-            if(item)
-                visitados.push(index)
-        })
-        callback(rota, visitados)
-
-        return caminho; 
     }
     savePajek(fileName){
         var data = ''
@@ -115,12 +128,9 @@ module.exports = class Graph{
         })
         if (this.directed) {
             data += '*Arcs \n'
-            for (var i = 0; i < this.size; i++)
-            {
-                for (var j = 0; j < this.size; j++)
-                {
-                    if (this.matrix[i][j] != Infinity)
-                    {
+            for (var i = 0; i < this.size; i++){
+                for (var j = 0; j < this.size; j++){
+                    if (this.matrix[i][j] != Infinity){
                         data += (i + 1) + ' ' + (j + 1) + ' ' + this.matrix[i][j] + '\n'
                     }
                 }
@@ -128,45 +138,72 @@ module.exports = class Graph{
         }
         else {
             data += '*Edges \n'
-            for (var i = 0; i < this.size; i++)
-            {
-                for (var j = i; j < this.size; j++)
-                {
-                    if (this.matrix[i][j] != Infinity)
-                    {
+            for (var i = 0; i < this.size; i++){
+                for (var j = i; j < this.size; j++){
+                    if (this.matrix[i][j] != Infinity){
                         data += (i + 1) + ' ' + (j + 1) + ' ' + this.matrix[i][j] + '\n'
                     }
                 }
             }
         }
-        fs.writeFileSync(__dirname + '/' + fileName + '.net', data)
+        fs.writeFileSync(fileName + '.net', data)
     }
-    loadPajek(fileName){
-        /*let data = fs.readFileSync(__dirname + '/' + fileName + '.net', 'utf8').split('\n')        
-        this.size = Number(data[0].match(/\d+/)[0])
-        
-        let line = ''
-        for(let currentLine  = 1; currentLine < data.lenght; ++currentLine){
-            if(data[currentLine][0] == '*')
-                break
-            console.log(data[currentLine])
-            line = data[currentLine].split(' ')
-
-            this.vertices[Number(line[0])].setName(line[1].substr(1,line[1].length))
+    loadPajek(fileName){        
+        let data
+        try {            
+            data = fs.readFileSync(fileName + '.net', 'utf8').split('\n')
+        } 
+        catch (error) {
+            console.log(error)
+            return
         }
 
 
+        this.size = Number(data[0].match(/\d+$/)[0])
+        this.matrix = []
+        for (var i = 0; i < this.size; i++){
+            this.matrix[i] = []
+            for(var j = 0; j < this.size; ++j)
+                this.matrix[i][j] = Infinity
+        }
+        let index = 0
+        let name = ''
+        let currentLine  = 1
+        this.vertices = []
+        for(; currentLine < data.length; currentLine++){
+            if(data[currentLine] == '')
+                continue
+            if(data[currentLine][0] == '*')
+                break
+            index = Number(data[currentLine].match(/^\d+/g)[0]) - 1
+            name = data[currentLine].match(/".*"/g)[0]
+            name = name.substr(1,name.length - 2)
+            this.vertices[index] = {
+                name: name,
+                getName(){
+                    return this.name
+                },
+                setName(name){
+                    this.name = name
+                }
+            }
+        }
+        if(data[currentLine].search(/Arcs/) != -1)
+            this.directed = true
+        else if(data[currentLine].search(/Edges/) != -1)
+            this.directed = false
+        else
+            throw new Error('Propriedade do arquivo nao compreendida.')        
         
-        
-        
-        
-        
-        
-        //console.log(this.vertices)*/
+        let fromToCost = []
+        for (currentLine++; currentLine < data.length; currentLine++) {
+            if(data[currentLine] == '')
+                continue
+            fromToCost = data[currentLine].split(' ')            
+            this.createAdjacency(fromToCost[0] - 1, fromToCost[1] - 1, fromToCost[2])            
+        }
     }
 }
 
-/*var a = new Graph(8, true)
-
-a.loadPajek('test')*/
-
+/*var a = new Graph('maze225')
+a.printAdjacencys()*/

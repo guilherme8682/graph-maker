@@ -1,75 +1,35 @@
 var Graph = require('./Graph')
+var fs = require('fs')
 
-module.exports = class Map{
+module.exports = class Map{ // Overload: new Map(canvas:Canvas, size:Number), new Map(canvas:Canvas, fileName:String)
     constructor(canvas, size){
+        if(!canvas)
+            throw new Error('Missing parameter in Map.')
         this.canvas = canvas
         this.context = canvas.getContext('2d')
-        this.numberOfBlocks = size
-        
+        this.name = ''
         this.currentSearch = null
         this.currentDrawing = this.setBeginPoint.bind(this)
         this.originPoint = 0
         this.destinyPoint = size - 1
         this.obstacleIntensity = 50
-
+        if(typeof size == 'number'){
+            this.makeRandomGraph(size)
+        }
+        else if(typeof size == 'string'){
+            this.loadGraphFromFile(size)            
+        }
+        else
+            throw new Error('Missing parameter in Map.')
+        this.drawMap()
+    }
+    makeRandomGraph(size){
+        this.numberOfBlocks = size
         this.refreshScreen(true)
-        this.makeMapGraph()
-        this.drawMap()
-    }
-    refreshScreen(fristTime){
-        var height = window.innerHeight - 5,
-            width = window.innerWidth - 300,
-            resolution = height < width ? height : width
-        if(resolution < 600)
-            resolution = 600
-        
-        this.canvas.height = resolution
-        this.canvas.width = resolution
-        this.numberOfBlocksPerLine = Math.ceil(Math.sqrt(this.numberOfBlocks))
-        this.blockSize = {
-            x:  canvas.width / this.numberOfBlocksPerLine,
-            y: canvas.height / this.numberOfBlocksPerLine
-        }
-        if(fristTime)
-            return
-        this.drawMap()
-    }
-    searchWithDijkstra(){
-        this.graph.dijkstra(this.originPoint, this.destinyPoint, (rota, visitados) => {
-            this.drawBlocks(visitados)
-            this.drawRoute(rota)
-        })
-        this.currentSearch = this.searchWithDijkstra.bind(this)
-    }
-    drawBlocks(list){
-        if(!list)
-            return
-        list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)'))
-    }
-    drawRoute(list){
-        var current = {
-            x: (list[0] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
-            y: (Math.floor(list[0] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
-        }
-        this.context.strokeStyle = 'white'
-        this.context.lineCap="round"
-        this.context.lineWidth = this.blockSize.x / 4
-        this.context.beginPath()
-        this.context.moveTo(current.x, current.y)
-        for (let i = 1; i < list.length; i++) {
-            current = {
-                x: (list[i] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
-                y: (Math.floor(list[i] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
-            }
-            this.context.lineTo(current.x, current.y)
-        }        
-        this.context.stroke()
-    }
-    makeMapGraph(){
         this.graph = new Graph(this.numberOfBlocks, true)
         this.costVertices = []
         for (var i = 0; i < this.numberOfBlocks; i++)
-            this.costVertices[i] = 1//Math.floor(Math.random() * 100)
+            this.costVertices[i] = Math.floor(Math.random() * 100)
 
         for(var i = 0; i < this.numberOfBlocksPerLine; i++){
             var column = i % this.numberOfBlocksPerLine
@@ -122,6 +82,90 @@ module.exports = class Map{
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
             }        
         }
+
+    }
+    loadGraphFromFile(fileName){
+        try {
+            let dataJson = fs.readFileSync(fileName + '.json')
+            let data = JSON.parse(dataJson)
+            this.name = data.name            
+            this.originPoint = data.origin
+            this.destinyPoint = data.destiny
+        } 
+        catch (error) {
+            console.log(error)
+        }
+        this.graph = new Graph(fileName)
+
+        if(!this.graph.size)
+            return
+
+        this.numberOfBlocks = this.graph.size
+        this.costVertices = []
+        for (let i = 0; i < this.graph.matrix.length; i++) {
+            this.costVertices[i] = Infinity
+            for (let j = 0; j < this.graph.matrix[i].length; j++) {
+                if(this.graph.matrix[j][i] != Infinity){
+                    this.costVertices[i] = this.graph.matrix[j][i]
+                    break
+                }                
+            }            
+        }
+        this.refreshScreen()
+    }
+    refreshScreen(fristTime){
+        var height = window.innerHeight - 100,
+            width = window.innerWidth - 300,
+            resolution = height < width ? height : width
+        if(resolution < 600)
+            resolution = 600
+        
+        if(this.resolution == resolution)        
+            return
+        else
+            this.resolution = resolution
+
+        this.canvas.height = this.resolution
+        this.canvas.width = this.resolution
+        this.numberOfBlocksPerLine = Math.ceil(Math.sqrt(this.numberOfBlocks))
+        this.blockSize = {
+            x:  canvas.width / this.numberOfBlocksPerLine,
+            y: canvas.height / this.numberOfBlocksPerLine
+        }
+        if(fristTime)
+            return
+        this.drawMap()
+    }
+    searchWithDijkstra(){
+        this.graph.dijkstra(this.originPoint, this.destinyPoint, (rota, visitados) => {
+            this.drawBlocks(visitados)
+            this.drawRoute(rota)
+        })
+        this.currentSearch = this.searchWithDijkstra.bind(this)
+    }
+    drawBlocks(list){
+        if(!list)
+            return
+        list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)'))
+    }
+    drawRoute(list){
+        var current = {
+            x: (list[0] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
+            y: (Math.floor(list[0] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
+        }
+        this.context.strokeStyle = 'white'
+        this.context.lineCap="round"
+        this.context.lineWidth = this.blockSize.x / 4
+        this.context.beginPath()
+        this.context.moveTo(current.x, current.y)
+        for (let i = 1; i < list.length; i++) {
+            current = {
+                x: (list[i] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
+                y: (Math.floor(list[i] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
+            }
+            this.context.lineTo(current.x, current.y)
+        }        
+        this.context.stroke()
     }
     drawBackGround(){
         this.context.fillStyle = 'PaleTurquoise'
@@ -129,9 +173,9 @@ module.exports = class Map{
     }
     drawMap(){
         this.drawBackGround()
-        var color = ''
+        let nColor = 0
         for(var i = 0; i < this.numberOfBlocks; ++i){
-            let nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
+            nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
             this.drawSquare(i,'rgb(255,' + nColor + ',' + nColor + ')')
         }        
         this.drawSquare(this.originPoint, 'LawnGreen')
@@ -165,11 +209,11 @@ module.exports = class Map{
     }
     setBeginPoint(click){
         this.originPoint = this.indexFromClick(click)
-        this.refreshScreen()
+        this.drawMap()
     }
-    setDestinationPoint(click){        
+    setDestinationPoint(click){
         this.destinyPoint = this.indexFromClick(click)
-        this.refreshScreen()
+        this.drawMap()
     }
     indexFromClick(click){
         return Math.floor(click.offsetX / this.blockSize.x) + Math.floor(click.offsetY / this.blockSize.y) * this.numberOfBlocksPerLine
@@ -178,7 +222,7 @@ module.exports = class Map{
         if(name == 'dijkstra'){
             this.currentSearch = this.searchWithDijkstra.bind(this)
         }
-        this.refreshScreen()
+        this.drawMap()
     }
     activeDrawingMethod(name){
         if(name == 'beginPoint')
@@ -258,5 +302,14 @@ module.exports = class Map{
     disableSearchMethod(){
         this.currentSearch = null
         this.drawMap()
+    }
+    saveMap(fileName, mapName){
+        let data = JSON.stringify({
+            name: mapName,
+            origin: this.originPoint, 
+            destiny: this.destinyPoint}
+        )
+        fs.writeFile(fileName + '.json', data, error => {if(error) throw new Error(error)})        
+        this.graph.savePajek(fileName)        
     }
 }
