@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <title>Make graphs with Electron</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Roboto+Slab" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="mainWindow.css">
+</head>
+<body>
+    <div id="navBar">
+        <div class="navButton left">
+            <i id="newFileButton" class="material-icons">insert_drive_file</i>
+        </div>
+        <div class="navButton left">
+            <i id="saveButton" class="material-icons">save</i>
+        </div>
+        <div class="navInput left">
+            <input id="mapNameField" placeholder="Choose a name" type="text" spellcheck="false">
+        </div>
+        <div class="navButton right">
+                <i id="readButton" class="material-icons">folder_open</i>
+        </div>
+    </div>
+    <div id='controllerContainer'>
+        <div class="option">
+            <h2><i class="material-icons">settings</i>
+            Options</h2>
+        </div>
+        <div class="option">
+            <p>Search method:</p>
+            <select id="SearchMethod">
+                <option selected value="dijkstra">Dijkstra</option>
+            </select>
+        </div>
+        
+        <div class="option">
+            <button id="find">Find</button>
+        </div>
+        <div class="option">
+            <p>Drawing method:</p>
+            <select id="drawingMethod">
+                <option selected value="beginPoint">Begin point</option>
+                <option value="destinationPoint">Destination point</option>
+                <option value="obstacle">Obstacle</option>
+            </select>
+        </div>
+        <div class="option" id="obstacleIntensityField" hidden="true">
+            <p>Obstacle intensity:</p>
+            <input type="range" min="1" max="100" value="50" class="slider" id="obstacleIntensity">
+        </div>
+    </div>    
+    <div id="canvasContainer">
+        <canvas id="graphViewer"></canvas>
+    </div>
+</body>
+<script>
+    const { events } = require('./mainWindowEvents')
+    let canvas = document.getElementById('graphViewer')
+    events(canvas)
+</script>
+</html>

@@ -2,13 +2,23 @@
   "name": "makegraphswithelectron",
   "version": "1.0.0",
   "description": "Visual application to manage graphs with javascript",
-  "main": "main.js",
+  "main": "./src/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "build"
   },
   "author": "Guilherme Rocha",
   "license": "ISC",
-  "dependencies": {
-    "electron": "^1.8.2"
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^1.8.2",
+    "electron-builder": "^20.4.0"
+  },
+  "build": {
+    "appId": "com.GraphsWithElectron",
+    "win": {
+      "target": "portable",
+      "icon": "assets/logo.ico"
+    }
   }
 }
