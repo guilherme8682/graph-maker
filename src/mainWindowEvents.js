@@ -72,10 +72,10 @@ module.exports.events = function(canvas){
                     }
                 ]
             }
-        )[0]
-        path = path.substr(0, path.length - 4)
+        )
         if(!path)
             return
+        path = path[0].substr(0, path.length - 4)        
         try {
             map = new Map(canvas, path)
             document.getElementById('mapNameField').value = map.name
@@ -88,13 +88,11 @@ module.exports.events = function(canvas){
             console.log(error)
         }
     })
-    document.getElementById('saveButton').addEventListener('click', saveMapFile) 
-    
+    document.getElementById('saveButton').addEventListener('click', saveMapFile)     
     document.getElementById('newFileButton').addEventListener('click', () => {
-        map = new Map(canvas, 100)                
+        map = new Map(canvas, 400)                
         buttonFind.innerText = 'Find'
         map.activeDrawingMethod(drawingMethod.value)
         map.setObstacleIntensity(Number(obstacleIntensity.value))
     })
-
 }

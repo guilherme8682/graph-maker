@@ -1,5 +1,5 @@
-var { Graph } = require('./Graph')
-var fs = require('fs')
+const { Graph } = require('./Graph')
+const { readFileSync } = require('fs')
 
 module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number), new Map(canvas:Canvas, fileName:String)
     constructor(canvas, size){
@@ -13,12 +13,10 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         this.originPoint = 0
         this.destinyPoint = size - 1
         this.obstacleIntensity = 50
-        if(typeof size == 'number'){
+        if(typeof size == 'number')
             this.makeRandomGraph(size)
-        }
-        else if(typeof size == 'string'){
-            this.loadGraphFromFile(size)            
-        }
+        else if(typeof size == 'string')
+            this.loadGraphFromFile(size)
         else
             throw new Error('Missing parameter in Map.')
         this.drawMap()
@@ -28,11 +26,10 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         this.refreshScreen(true)
         this.graph = new Graph(this.numberOfBlocks, true)
         this.costVertices = []
-        for (var i = 0; i < this.numberOfBlocks; i++)
+        for (let i = 0; i < this.numberOfBlocks; i++)
             this.costVertices[i] = Math.floor(Math.random() * 100)
-
-        for(var i = 0; i < this.numberOfBlocksPerLine; i++){
-            var column = i % this.numberOfBlocksPerLine
+        for(let i = 0; i < this.numberOfBlocksPerLine; i++){
+            let column = i % this.numberOfBlocksPerLine
             if(column == 0){
                 this.graph.createAdjacency(i, i+1, this.costVertices[i+1])
                 this.graph.createAdjacency(i, i+this.numberOfBlocksPerLine, this.costVertices[i+this.numberOfBlocksPerLine])
@@ -47,8 +44,8 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
                 this.graph.createAdjacency(i, i+this.numberOfBlocksPerLine, this.costVertices[i+this.numberOfBlocksPerLine])
             }
         }
-        for(var i = this.numberOfBlocksPerLine; i  < this.numberOfBlocks - this.numberOfBlocksPerLine; i++){
-            var column = i % this.numberOfBlocksPerLine
+        for(let i = this.numberOfBlocksPerLine; i  < this.numberOfBlocks - this.numberOfBlocksPerLine; i++){
+            let column = i % this.numberOfBlocksPerLine
             if(column == 0){
                 this.graph.createAdjacency(i, i+1, this.costVertices[i+1])
                 this.graph.createAdjacency(i, i+this.numberOfBlocksPerLine, this.costVertices[i+this.numberOfBlocksPerLine])
@@ -66,8 +63,8 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
             }
         }
-        for(var i = this.numberOfBlocks - this.numberOfBlocksPerLine; i < this.numberOfBlocks; i++){
-            var column = i % this.numberOfBlocksPerLine
+        for(let i = this.numberOfBlocks - this.numberOfBlocksPerLine; i < this.numberOfBlocks; i++){
+            let column = i % this.numberOfBlocksPerLine
             if(column == 0){
                 this.graph.createAdjacency(i, i+1, this.costVertices[i+1])
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
@@ -82,11 +79,10 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
             }        
         }
-
     }
     loadGraphFromFile(fileName){
         try {
-            let dataJson = fs.readFileSync(fileName + '.json')
+            let dataJson = readFileSync(fileName + '.json')
             let data = JSON.parse(dataJson)
             this.name = data.name            
             this.originPoint = data.origin
@@ -96,14 +92,13 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         catch (error) {
             throw error
         }
-
         this.numberOfBlocks = this.graph.size
         this.costVertices = []
-        for (let i = 0; i < this.graph.matrix.length; i++) {
+        for (let i = 0; i < this.numberOfBlocks; i++) {
             this.costVertices[i] = Infinity
-            for (let j = 0; j < this.graph.matrix[i].length; j++) {
-                if(this.graph.matrix[j][i] != Infinity){
-                    this.costVertices[i] = this.graph.matrix[j][i]
+            for (let j = 0; j < this.numberOfBlocks; j++) {
+                if(this.graph.getCostAdjacency(j, i) != Infinity){
+                    this.costVertices[i] = this.graph.getCostAdjacency(j, i)
                     break
                 }                
             }            
@@ -111,17 +106,15 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         this.refreshScreen()
     }
     refreshScreen(fristTime){
-        var height = window.innerHeight - 100,
+        let height = window.innerHeight - 100,
             width = window.innerWidth - 300,
             resolution = height < width ? height : width
         if(resolution < 600)
-            resolution = 600
-        
+            resolution = 600        
         if(this.resolution == resolution)        
             return
         else
             this.resolution = resolution
-
         this.canvas.height = this.resolution
         this.canvas.width = this.resolution
         this.numberOfBlocksPerLine = Math.ceil(Math.sqrt(this.numberOfBlocks))
@@ -137,8 +130,8 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         this.graph.dijkstra(this.originPoint, this.destinyPoint, (rota, visitados) => {
             this.drawBlocks(visitados)
             this.drawRoute(rota)
+            console.log('pronto')
         })
-        this.currentSearch = this.searchWithDijkstra.bind(this)
     }
     drawBlocks(list){
         if(!list)
@@ -146,7 +139,7 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)'))
     }
     drawRoute(list){
-        var current = {
+        let current = {
             x: (list[0] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
             y: (Math.floor(list[0] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
         }
@@ -171,24 +164,24 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
     drawMap(){
         this.drawBackGround()
         let nColor = 0
-        for(var i = 0; i < this.numberOfBlocks; ++i){
+        for(let i = 0; i < this.numberOfBlocks; ++i){
             nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
             this.drawSquare(i,'rgb(255,' + nColor + ',' + nColor + ')')
         }        
         this.drawSquare(this.originPoint, 'LawnGreen')
-        this.drawSquare(this.destinyPoint, 'DodgerBlue')        
+        this.drawSquare(this.destinyPoint, 'DodgerBlue')
         if(this.currentSearch)
             this.currentSearch()
     }
     drawSquare(index, color){
-        var origin = {
+        let origin = {
             x: (index % this.numberOfBlocksPerLine * this.blockSize.x),
             y: (Math.floor(index / this.numberOfBlocksPerLine) * this.blockSize.y)
         }
-        var x = this.blockSize.x * 0.05 + origin.x
-        var y = this.blockSize.y * 0.05 + origin.y
-        var w = this.blockSize.x * 0.9
-        var h = this.blockSize.y * 0.9
+        let x = this.blockSize.x * 0.05 + origin.x
+        let y = this.blockSize.y * 0.05 + origin.y
+        let w = this.blockSize.x * 0.9
+        let h = this.blockSize.y * 0.9
         this.context.fillStyle = color
         this.context.fillRect(x,y,w,h)   
     }
@@ -228,7 +221,7 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
             this.obstacleIntensity = value
     }
     setValueForVertice(click){
-        var value = this.obstacleIntensity,
+        let value = this.obstacleIntensity,
             index = this.indexFromClick(click),
             column = index % this.numberOfBlocksPerLine
         
@@ -289,8 +282,6 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         this.drawMap()
     }
     saveMap(fileName, mapName){
-        
-        
         let data = JSON.stringify({
             name: mapName,
             origin: this.originPoint, 

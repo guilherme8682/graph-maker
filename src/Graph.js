@@ -1,4 +1,4 @@
-var fs = require('fs')
+const { writeFileSync, readFileSync } = require('fs')
 
 module.exports.Graph = class Graph{
     constructor(size, directed){ //Overload: new Graph(path:String), new Graph(size:Number, directed:Boolean)
@@ -11,69 +11,82 @@ module.exports.Graph = class Graph{
     }
     makeGraphBy(size, directed){
         this.directed = directed
-        this.size = size
-
+        this.size = size        
+        function Vertex() {
+            this.name = ''
+            this.getName = () => {
+                return this.name
+            }
+            this.setName = (name) => {
+                this.name = name
+            }
+        }        
         this.vertices = []
-        for(var i = 0; i < this.size; ++i)
-            this.vertices[i] = {
-                name: '',
-                getName(){
-                    return this.name
-                },
-                setName(name){
-                    this.name = name
-                }
-            }        
-        this.matrix = []
-        for (var i = 0; i < this.size; ++i){
-            this.matrix[i] = []
-            for(var j = 0; j < this.size; ++j)
-                this.matrix[i][j] = Infinity
-        }
+        for(let i = 0; i < this.size; ++i)
+            this.vertices[i] = new Vertex()     
+        this.matrix = new Array(this.size)
+    }
+    getCostAdjacency(from, to){
+        if(!this.matrix[from] || !this.matrix[from][to])
+            return Infinity
+        else 
+            return this.matrix[from][to]
     }
     createAdjacency(from, to, cost){
-        if(this.directed)
-            this.matrix[from][to] = cost
+        if(cost == Infinity)
+            this.removeAdjacency(from, to)
         else{
-            this.matrix[from][to] = cost
-            this.matrix[to][from] = cost
+            if(!this.matrix[from])
+                this.matrix[from] = new Array(this.size)
+            if(this.directed)
+                this.matrix[from][to] = cost
+            else{
+                this.matrix[from][to] = cost
+                this.matrix[to][from] = cost
+            }
         }
     }
 	removeAdjacency(from, to){
+        if(!this.matrix[from])
+            return
         if(this.directed)
-            this.matrix[from][to] = Infinity
+            delete this.matrix[from][to]
         else{
-            this.matrix[from][to] = Infinity
-            this.matrix[to][from] = Infinity
+            delete this.matrix[from][to]
+            delete this.matrix[to][from]
         }
     }
     setInformation(index, name){
-        this.vertices[index].setName(name)
+        this.vertes[index].setName(name)
     }    
     printAdjacencys(){
         console.log('Adjacencys:')
-        this.matrix.forEach((line) => {
-            line.forEach((element) => process.stdout.write((element == Infinity ? 'I' : element) + ' '))
+        let currentCost
+        for(let i = 0; i < this.size; ++i){
+            for(let j = 0; j < this.size; ++j){
+                currentCost = this.getCostAdjacency(i, j)
+                process.stdout.write((currentCost == Infinity ? 'I' : currentCost) + ' ')
+            }            
             process.stdout.write('\n')
-        })
+        }
     }
     printVertices(){
-        console.log('Vertices:')
-        this.vertices.forEach((vertice, index) => console.log('index:',index,'name:',vertice.getName()))
+        console.log('All vertex:')
+        this.vertices.forEach((vertex, index) => console.log('index:',index,'name:',vertex.getName()))
     }
     dijkstra(s, t, callback){
         try {
             if(s < 0 || t >= this.size)
                 throw 'Unsupported values'
-            var MEMBRO = true
-            var NAOMEMBRO = false
-            var caminho = new Array(this.size)
-            var distancia = new Array(this.size)
-            var perm = new Array(this.size)
-            var corrente, k = s, dc, j = 0
-            var menordist, novadist
+            let MEMBRO = true
+            let NAOMEMBRO = false
+            let caminho = new Array(this.size)
+            let distancia = new Array(this.size)
+            let perm = new Array(this.size)
+            let corrente, k = s, dc, j = 0
+            let menordist, novadist
             //inicialização
-            for (var i = 0; i < this.size; ++i) {
+            for (let i = 0; i < this.size; ++i) {
                 perm[i] = NAOMEMBRO
                 distancia[i] = Infinity
                 caminho[i] = -1
@@ -84,9 +97,9 @@ module.exports.Graph = class Graph{
             while (corrente != t) {
                 menordist = Infinity
                 dc = distancia[corrente]
-                for (var i = 0; i < this.size; i++) {
+                for (let i = 0; i < this.size; i++) {
                     if (!perm[i]) {
-                        novadist = dc + this.matrix[corrente][i]
+                        novadist = dc + this.getCostAdjacency(corrente, i)                        
                         if (novadist < distancia[i]) {
 
                             distancia[i] = novadist
@@ -102,12 +115,12 @@ module.exports.Graph = class Graph{
                 perm[corrente] = MEMBRO;
             }            
             //Tratando resultados
-            var i = t, rota = [t]
+            let i = t, rota = [t]
             while(i != s){
                 rota.unshift(caminho[i])
                 i = caminho[i]
             }
-            var visitados = []
+            let visitados = []
             perm.forEach( (item, index) => {
                 if(item)
                     visitados.push(index)
@@ -120,7 +133,7 @@ module.exports.Graph = class Graph{
         }
     }
     savePajek(fileName){
-        var data = ''
+        let data = ''
         
         data += '*Vertices  ' + this.size + '\n';
         this.vertices.forEach((vertice, index) =>{
@@ -128,41 +141,31 @@ module.exports.Graph = class Graph{
         })
         if (this.directed) {
             data += '*Arcs \n'
-            for (var i = 0; i < this.size; i++){
-                for (var j = 0; j < this.size; j++){
-                    if (this.matrix[i][j] != Infinity){
-                        data += (i + 1) + ' ' + (j + 1) + ' ' + this.matrix[i][j] + '\n'
+            for (let i = 0; i < this.size; i++){
+                for (let j = 0; j < this.size; j++){
+                    if (this.getCostAdjacency(i, j) != Infinity){
+                        data += (i + 1) + ' ' + (j + 1) + ' ' + this.getCostAdjacency(i, j) + '\n'
                     }
                 }
             }
         }
         else {
             data += '*Edges \n'
-            for (var i = 0; i < this.size; i++){
-                for (var j = i; j < this.size; j++){
-                    if (this.matrix[i][j] != Infinity){
-                        data += (i + 1) + ' ' + (j + 1) + ' ' + this.matrix[i][j] + '\n'
+            for (let i = 0; i < this.size; i++){
+                for (let j = i; j < this.size; j++){
+                    if (this.getCostAdjacency(i, j) != Infinity){
+                        data += (i + 1) + ' ' + (j + 1) + ' ' + this.getCostAdjacency(i, j) + '\n'
                     }
                 }
             }
         }
-        fs.writeFileSync(fileName + '.net', data)
+        writeFileSync(fileName + '.net', data)
     }
     loadPajek(fileName){        
-        let data
-        try {            
-            data = fs.readFileSync(fileName + '.net', 'utf8').split('\n')
-        } 
-        catch (error) {
-            throw error
-        }        
+        let data           
+        data = readFileSync(fileName + '.net', 'utf8').split('\n')
         this.size = Number(data[0].match(/\d+/)[0])
-        this.matrix = []
-        for (var i = 0; i < this.size; i++){
-            this.matrix[i] = []
-            for(var j = 0; j < this.size; ++j)
-                this.matrix[i][j] = Infinity
-        }
+        this.matrix = new Array(this.size)
         let index = 0
         let name = ''
         let currentLine  = 1

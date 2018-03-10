@@ -15,7 +15,7 @@ app.on('ready', () => {
         slashes: true
     }))
 
-    //mainWindow.openDevTools()
+    mainWindow.openDevTools()
     Menu.setApplicationMenu(null)
 
 })
