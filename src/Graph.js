@@ -1,7 +1,18 @@
 const { writeFileSync, readFileSync } = require('fs')
 
-module.exports.Graph = class Graph{
-    constructor(size, directed){ //Overload: new Graph(path:String), new Graph(size:Number, directed:Boolean)
+class Vertex{
+    constructor(){
+        this.name = ''        
+    }
+    getName(){
+        return this.name
+    }
+    setName(name){
+        this.name = name
+    }
+}
+class Graph{
+    constructor(size, directed){ //Overload: (path:String), (size:Number, directed:Boolean)
         if(typeof size == 'string' && !directed)
             this.loadPajek(size)
         else if(typeof size == 'number' && typeof directed == 'boolean')
@@ -11,16 +22,7 @@ module.exports.Graph = class Graph{
     }
     makeGraphBy(size, directed){
         this.directed = directed
-        this.size = size        
-        function Vertex() {
-            this.name = ''
-            this.getName = () => {
-                return this.name
-            }
-            this.setName = (name) => {
-                this.name = name
-            }
-        }        
+        this.size = size
         this.vertices = []
         for(let i = 0; i < this.size; ++i)
             this.vertices[i] = new Vertex()     
@@ -204,3 +206,5 @@ module.exports.Graph = class Graph{
         }
     }
 }
+
+module.exports.Graph = Graph

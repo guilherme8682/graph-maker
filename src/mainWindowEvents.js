@@ -1,17 +1,15 @@
 const { Map } = require('./Map')
 const { dialog } = require('electron').remote
 
-module.exports.events = function(canvas){
-    let map = new Map(canvas, 100)
-
+module.exports.events = (canvas) => {
+    let map
     let searchMethod = document.getElementById('SearchMethod')
     let buttonFind = document.getElementById('find')    
     let drawingMethod = document.getElementById('drawingMethod')    
     let obstacleIntensity = document.getElementById('obstacleIntensity')    
     let mapNameField = document.getElementById('mapNameField')
     let fileNameToOpenField = document.getElementById('fileNameToOpenField')
-    
-    function saveMapFile(){
+    let saveMap = () => {
         let name = mapNameField.value
         if(name == ''){
             alert('You must choose a name!')
@@ -32,13 +30,21 @@ module.exports.events = function(canvas){
         map.saveMap(path,name)
         alert('Map save as "' + name + '.net" and "' + name + '.json"\n in' + path)
     }
+    let createMap = () => {
+        map = new Map(canvas, 400)                
+        buttonFind.innerText = 'Find'
+        map.activeDrawingMethod(drawingMethod.value)
+        map.setObstacleIntensity(Number(obstacleIntensity.value))
+    }    
+    
+    createMap()
     window.addEventListener('resize', () => {
         map.refreshScreen()
     })
     buttonFind.addEventListener('click',() => {
         if(buttonFind.innerText == 'Find'){
             map.activeSearchMethod(searchMethod.value)
-            buttonFind.innerText = 'Stop find'
+            buttonFind.innerText = 'Stop'
         }
         else{
             map.disableSearchMethod()
@@ -61,7 +67,7 @@ module.exports.events = function(canvas){
     mapNameField.addEventListener('keypress', (button) => {
         let char = button.char || button.charCode || button.which;
         if(char == 13) // 13 = Enter
-        saveMapFile()
+        saveMap()
     })
     document.getElementById('readButton').addEventListener('click', () => {
         let path = dialog.showOpenDialog({
@@ -75,7 +81,7 @@ module.exports.events = function(canvas){
         )
         if(!path)
             return
-        path = path[0].substr(0, path.length - 4)        
+        path = path[0].substr(0, path[0].length - 4)
         try {
             map = new Map(canvas, path)
             document.getElementById('mapNameField').value = map.name
@@ -88,11 +94,8 @@ module.exports.events = function(canvas){
             console.log(error)
         }
     })
-    document.getElementById('saveButton').addEventListener('click', saveMapFile)     
-    document.getElementById('newFileButton').addEventListener('click', () => {
-        map = new Map(canvas, 400)                
-        buttonFind.innerText = 'Find'
-        map.activeDrawingMethod(drawingMethod.value)
-        map.setObstacleIntensity(Number(obstacleIntensity.value))
-    })
+    document.getElementById('saveButton').addEventListener('click', saveMap)     
+    document.getElementById('newFileButton').addEventListener('click', createMap)
+
+    return map
 }

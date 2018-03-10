@@ -1,5 +1,5 @@
 const { Graph } = require('./Graph')
-const { readFileSync } = require('fs')
+const { readFileSync, writeFile } = require('fs')
 
 module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number), new Map(canvas:Canvas, fileName:String)
     constructor(canvas, size){
@@ -27,7 +27,7 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         this.graph = new Graph(this.numberOfBlocks, true)
         this.costVertices = []
         for (let i = 0; i < this.numberOfBlocks; i++)
-            this.costVertices[i] = Math.floor(Math.random() * 100)
+            this.costVertices[i] = Math.floor(Math.random() * 99 + 1)
         for(let i = 0; i < this.numberOfBlocksPerLine; i++){
             let column = i % this.numberOfBlocksPerLine
             if(column == 0){
@@ -130,7 +130,6 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         this.graph.dijkstra(this.originPoint, this.destinyPoint, (rota, visitados) => {
             this.drawBlocks(visitados)
             this.drawRoute(rota)
-            console.log('pronto')
         })
     }
     drawBlocks(list){
@@ -287,7 +286,7 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
             origin: this.originPoint, 
             destiny: this.destinyPoint}
         )
-        fs.writeFile(fileName + '.json', data, error => {if(error) throw new Error(error)})        
+        writeFile(fileName + '.json', data, error => {if(error) throw new Error(error)})        
         this.graph.savePajek(fileName)        
     }
 }
