@@ -1,7 +1,7 @@
 const { Graph } = require('./Graph')
 const { readFileSync, writeFile } = require('fs')
 
-module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number), new Map(canvas:Canvas, fileName:String)
+module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:String)
     constructor(canvas, size){
         if(!canvas)
             throw new Error('Missing parameter in Map.')
@@ -223,7 +223,6 @@ module.exports.Map = class Map{ // Overload: new Map(canvas:Canvas, size:Number)
         let value = this.obstacleIntensity,
             index = this.indexFromClick(click),
             column = index % this.numberOfBlocksPerLine
-        
         this.costVertices[index] = value
 
         if(index >= this.numberOfBlocksPerLine && index < (this.numberOfBlocks - this.numberOfBlocksPerLine)){

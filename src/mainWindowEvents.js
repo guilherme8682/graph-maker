@@ -1,14 +1,13 @@
 const { Map } = require('./Map')
-const { dialog } = require('electron').remote
+const { dialog, getCurrentWindow } = require('electron').remote
 
-module.exports.events = (canvas) => {
+function events(canvas){
     let map
     let searchMethod = document.getElementById('SearchMethod')
     let buttonFind = document.getElementById('find')    
     let drawingMethod = document.getElementById('drawingMethod')    
     let obstacleIntensity = document.getElementById('obstacleIntensity')    
     let mapNameField = document.getElementById('mapNameField')
-    let fileNameToOpenField = document.getElementById('fileNameToOpenField')
     let saveMap = () => {
         let name = mapNameField.value
         if(name == ''){
@@ -33,10 +32,10 @@ module.exports.events = (canvas) => {
     let createMap = () => {
         map = new Map(canvas, 400)                
         buttonFind.innerText = 'Find'
+        mapNameField.value = ''
         map.activeDrawingMethod(drawingMethod.value)
         map.setObstacleIntensity(Number(obstacleIntensity.value))
     }    
-    
     createMap()
     window.addEventListener('resize', () => {
         map.refreshScreen()
@@ -96,6 +95,13 @@ module.exports.events = (canvas) => {
     })
     document.getElementById('saveButton').addEventListener('click', saveMap)     
     document.getElementById('newFileButton').addEventListener('click', createMap)
-
+    document.getElementById('close').addEventListener('click', () => {
+        getCurrentWindow().close()
+    })
+    document.getElementById('minimize').addEventListener('click', () => {
+        getCurrentWindow().minimize()
+    })
     return map
 }
+
+module.exports.events = events

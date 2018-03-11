@@ -1,8 +1,12 @@
 const { writeFileSync, readFileSync } = require('fs')
+const { question } = require('readline-sync')
 
 class Vertex{
-    constructor(){
-        this.name = ''        
+    constructor(name){
+        if(name)
+            this.setName(name)
+        else
+            this.setName('')
     }
     getName(){
         return this.name
@@ -34,7 +38,12 @@ class Graph{
         else 
             return this.matrix[from][to]
     }
-    createAdjacency(from, to, cost){
+    createAdjacency(from, to, value){
+        let cost = Number(value)
+        if(cost == NaN){
+            console.log('caiu')
+            throw new Error('Invalid parameters')
+        }        
         if(cost == Infinity)
             this.removeAdjacency(from, to)
         else{
@@ -63,17 +72,18 @@ class Graph{
     }    
     printAdjacencys(){
         console.log('Adjacencys:')
-        let currentCost
+        let currentCost, line
         for(let i = 0; i < this.size; ++i){
+            line = ''
             for(let j = 0; j < this.size; ++j){
                 currentCost = this.getCostAdjacency(i, j)
-                process.stdout.write((currentCost == Infinity ? 'I' : currentCost) + ' ')
+                line += (currentCost == Infinity ? 'I' : currentCost) + ' '
             }            
-            process.stdout.write('\n')
+            console.log(line)
         }
     }
     printVertices(){
-        console.log('All vertex:')
+        console.log('All vertex::\n')
         this.vertices.forEach((vertex, index) => console.log('index:',index,'name:',vertex.getName()))
     }
     dijkstra(s, t, callback){
@@ -87,6 +97,8 @@ class Graph{
             let perm = new Array(this.size)
             let corrente, k = s, dc, j = 0
             let menordist, novadist
+            //Variaveis de tratamento            
+            let g = t, rota = [t], cont = 0, visitados = []
             //inicialização
             for (let i = 0; i < this.size; ++i) {
                 perm[i] = NAOMEMBRO
@@ -101,7 +113,10 @@ class Graph{
                 dc = distancia[corrente]
                 for (let i = 0; i < this.size; i++) {
                     if (!perm[i]) {
-                        novadist = dc + this.getCostAdjacency(corrente, i)                        
+                        /*var novocusto = this.getCostAdjacency(corrente, i)
+                        if(novocusto == Infinity)
+                            novocusto = 9999*/
+                        novadist = dc + this.getCostAdjacency(corrente, i)
                         if (novadist < distancia[i]) {
 
                             distancia[i] = novadist
@@ -109,30 +124,89 @@ class Graph{
                         }
                         if (distancia[i] < menordist) {
                             menordist = distancia[i]
+                            k = i
+                        }
+                    }
+                }
+                if(corrente == k){  //Busca impossivel
+                    rota = []
+                    g = s
+                    break
+                }
+                corrente = k
+                perm[corrente] = MEMBRO
+            }
+            //Tratando resultados
+            while(g != s && cont < this.size){
+                rota.unshift(caminho[g])
+                g = caminho[g]
+                cont++
+            }
+            perm.forEach( (item, index) => {
+                if(item)
+                    visitados.push(index)
+            })
+            if(callback)                
+                callback(rota, visitados)
+            return caminho
+        }
+        catch (error) {
+            throw(new Error(error))
+        }
+    }
+    dijkstraDoprofessor(s, t, callback){
+            let distancia = new Array(this.size)
+            let perm  = new Array(this.size)
+            let caminho = new Array(this.size)
+            let corrente, i, k=s, dc, j=0;
+            let menordist, novadist;
+            let MEMBRO = true;
+	        let NAOMEMBRO = false;
+            let INFINITO = 999999999;
+
+            //inicialização
+            for(i=0; i < this.size; ++i){
+                perm[i] = NAOMEMBRO;
+                distancia[i] = INFINITO;
+                caminho[i] = -1;
+            }
+            perm[s] = MEMBRO;
+            distancia[s] = 0;
+            corrente = s;
+            while(corrente != t){
+                menordist = INFINITO;
+                dc = distancia[corrente];
+                for(i = 0; i < this.size; i++){
+                    if(!perm[i]){
+                        novadist = dc + (this.getCostAdjacency(corrente, i) == Infinity ? INFINITO : this.getCostAdjacency(corrente, i));
+                        if(novadist < distancia[i]){
+                            distancia[i] = novadist;
+                            caminho[i] = corrente;						
+                        }
+                        if(distancia[i] < menordist){
+                            menordist = distancia[i];
                             k = i;
                         }
                     }
                 }
                 corrente = k;
                 perm[corrente] = MEMBRO;
-            }            
-            //Tratando resultados
-            let i = t, rota = [t]
-            while(i != s){
-                rota.unshift(caminho[i])
-                i = caminho[i]
             }
-            let visitados = []
+            let g = t, rota = [s], visitados = []
+            //Tratando resultados
+            while(g != s && cont < this.size){
+                rota.unshift(caminho[g])
+                g = caminho[g]
+                cont++
+            }
             perm.forEach( (item, index) => {
                 if(item)
                     visitados.push(index)
             })
-            callback(rota, visitados)
-            return caminho
-        }
-        catch (error) {
-            throw(new Error(error))
-        }
+            if(callback)                
+                callback(rota, visitados)
+
+            return distancia[t];
     }
     savePajek(fileName){
         let data = ''
@@ -180,15 +254,7 @@ class Graph{
             index = Number(data[currentLine].match(/^\d+/g)[0]) - 1
             name = data[currentLine].match(/".*"/g)[0]
             name = name.substr(1,name.length - 2)
-            this.vertices[index] = {
-                name: name,
-                getName(){
-                    return this.name
-                },
-                setName(name){
-                    this.name = name
-                }
-            }
+            this.vertices[index] = new Vertex(name)            
         }
         if(data[currentLine].search(/Arcs/) != -1)
             this.directed = true
@@ -208,3 +274,4 @@ class Graph{
 }
 
 module.exports.Graph = Graph
+module.exports.Vertex = Vertex
