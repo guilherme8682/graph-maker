@@ -7,13 +7,20 @@ let mainWindows
 
 app.on('ready', () => {
     
-    mainWindow = new BrowserWindow({width: 962, height: 764,resizable: true, frame: false, 'minHeight': 754, 'minWidth': 962})
+    mainWindow = new BrowserWindow({
+        width: 962, 
+        height: 764,
+        resizable: true, 
+        frame: false, 
+        'minHeight': 764, 
+        'minWidth': 962
+    })
     mainWindow.loadURL( url.format({
         pathname: path.join(__dirname, 'mainWindow.html'),
         protocol: 'file',
         slashes: true
     }))
-    mainWindow.openDevTools()
+    //mainWindow.openDevTools()
     Menu.setApplicationMenu(null)
 
 })

@@ -11,4 +11,4 @@ In the folder, run:
 ```
 
 ### Screenshot
-![capturartfyvk](https://user-images.githubusercontent.com/11547397/37192341-bc06621c-2343-11e8-9d2c-dc047739067d.PNG)
+![img](https://user-images.githubusercontent.com/11547397/37258398-4633bd22-2556-11e8-917d-c7cb2745edda.PNG)

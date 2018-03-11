@@ -157,7 +157,7 @@ module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canv
         this.context.stroke()
     }
     drawBackGround(){
-        this.context.fillStyle = 'PaleTurquoise'
+        this.context.fillStyle = '#b5b5b7'
         this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
     }
     drawMap(){
@@ -165,7 +165,7 @@ module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canv
         let nColor = 0
         for(let i = 0; i < this.numberOfBlocks; ++i){
             nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
-            this.drawSquare(i,'rgb(255,' + nColor + ',' + nColor + ')')
+            this.drawSquare(i,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')')
         }        
         this.drawSquare(this.originPoint, 'LawnGreen')
         this.drawSquare(this.destinyPoint, 'DodgerBlue')
@@ -204,7 +204,7 @@ module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canv
     activeDrawingMethod(name){
         if(name == 'beginPoint')
             this.currentDrawing = this.setBeginPoint.bind(this)
-        else if(name == 'destinationPoint')
+        else if(name == 'destinynPoint')
             this.currentDrawing = this.setDestinationPoint.bind(this)
         else if(name == 'obstacle')
             this.currentDrawing = this.setValueForVertice.bind(this)

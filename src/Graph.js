@@ -1,5 +1,4 @@
 const { writeFileSync, readFileSync } = require('fs')
-const { question } = require('readline-sync')
 
 class Vertex{
     constructor(name){
@@ -40,10 +39,8 @@ class Graph{
     }
     createAdjacency(from, to, value){
         let cost = Number(value)
-        if(cost == NaN){
-            console.log('caiu')
-            throw new Error('Invalid parameters')
-        }        
+        if(cost == NaN)
+            throw new Error('Invalid parameters') 
         if(cost == Infinity)
             this.removeAdjacency(from, to)
         else{
@@ -113,9 +110,6 @@ class Graph{
                 dc = distancia[corrente]
                 for (let i = 0; i < this.size; i++) {
                     if (!perm[i]) {
-                        /*var novocusto = this.getCostAdjacency(corrente, i)
-                        if(novocusto == Infinity)
-                            novocusto = 9999*/
                         novadist = dc + this.getCostAdjacency(corrente, i)
                         if (novadist < distancia[i]) {
 
@@ -154,64 +148,8 @@ class Graph{
             throw(new Error(error))
         }
     }
-    dijkstraDoprofessor(s, t, callback){
-            let distancia = new Array(this.size)
-            let perm  = new Array(this.size)
-            let caminho = new Array(this.size)
-            let corrente, i, k=s, dc, j=0;
-            let menordist, novadist;
-            let MEMBRO = true;
-	        let NAOMEMBRO = false;
-            let INFINITO = 999999999;
-
-            //inicialização
-            for(i=0; i < this.size; ++i){
-                perm[i] = NAOMEMBRO;
-                distancia[i] = INFINITO;
-                caminho[i] = -1;
-            }
-            perm[s] = MEMBRO;
-            distancia[s] = 0;
-            corrente = s;
-            while(corrente != t){
-                menordist = INFINITO;
-                dc = distancia[corrente];
-                for(i = 0; i < this.size; i++){
-                    if(!perm[i]){
-                        novadist = dc + (this.getCostAdjacency(corrente, i) == Infinity ? INFINITO : this.getCostAdjacency(corrente, i));
-                        if(novadist < distancia[i]){
-                            distancia[i] = novadist;
-                            caminho[i] = corrente;						
-                        }
-                        if(distancia[i] < menordist){
-                            menordist = distancia[i];
-                            k = i;
-                        }
-                    }
-                }
-                corrente = k;
-                perm[corrente] = MEMBRO;
-            }
-            let g = t, rota = [s], visitados = []
-            //Tratando resultados
-            while(g != s && cont < this.size){
-                rota.unshift(caminho[g])
-                g = caminho[g]
-                cont++
-            }
-            perm.forEach( (item, index) => {
-                if(item)
-                    visitados.push(index)
-            })
-            if(callback)                
-                callback(rota, visitados)
-
-            return distancia[t];
-    }
     savePajek(fileName){
-        let data = ''
-        
-        data += '*Vertices  ' + this.size + '\n';
+        let data = '*Vertices  ' + this.size + '\n';
         this.vertices.forEach((vertice, index) =>{
             data += (index + 1) + ' "' + vertice.getName() + '"\n'
         })

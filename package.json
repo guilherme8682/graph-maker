@@ -5,7 +5,8 @@
   "main": "./src/main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "build"
+    "dist": "build",
+    "pack": "build --dir"
   },
   "author": "Guilherme Rocha",
   "license": "ISC",
@@ -18,7 +19,7 @@
     "appId": "com.GraphsWithElectron",
     "win": {
       "target": "portable",
-      "icon": "assets/logo.ico"
+      "icon": "src/style/icon/logo.ico"
     }
   }
 }

@@ -27,7 +27,7 @@ function events(canvas){
             return
         path = path.substr(0, path.length - 4)
         map.saveMap(path,name)
-        alert('Map save as "' + name + '.net" and "' + name + '.json"\n in' + path)
+        alert('Map save as "' + name + '.net" and "' + name + '.json"\n in ' + path)
     }
     let createMap = () => {
         map = new Map(canvas, 400)                

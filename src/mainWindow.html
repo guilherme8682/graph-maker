@@ -2,12 +2,16 @@
 <html lang="pt">
 <head>
     <title>Make graphs with Electron</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto|Roboto+Slab" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="mainWindow.css">
+    <link rel="stylesheet" href="style/mainWindow.css">
 </head>
 <body>
     <div id="navBar">
+        <div class="left">
+            <img class="logo" src="style/icon/logo.ico" alt="">
+        </div>
+        <div class="title left">
+            <p>Graph maker</p>
+        </div>
         <div class="navButton left">
             <i id="newFileButton" class="material-icons">insert_drive_file</i>
         </div>
@@ -18,7 +22,7 @@
             <i id="saveButton" class="material-icons">save</i>
         </div>
         <div class="navInput left">
-            <input id="mapNameField" placeholder="Choose a name" type="text" spellcheck="false">
+            <input id="mapNameField" size="10" placeholder="Choose a name" type="text" spellcheck="false">
         </div>
         <div class="navButton right">
                 <i id="close" class="material-icons">close</i>
@@ -46,7 +50,7 @@
             <p>Drawing method:</p>
             <select id="drawingMethod">
                 <option selected value="beginPoint">Begin point</option>
-                <option value="destinationPoint">Destination point</option>
+                <option value="destinynPoint">Destiny point</option>
                 <option value="obstacle">Obstacle</option>
             </select>
         </div>
