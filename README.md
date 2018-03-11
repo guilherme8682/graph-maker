@@ -9,3 +9,6 @@ In the folder, run:
 > npm install
 > npm start
 ```
+
+### Screenshot
+![capturartfyvk](https://user-images.githubusercontent.com/11547397/37192341-bc06621c-2343-11e8-9d2c-dc047739067d.PNG)
