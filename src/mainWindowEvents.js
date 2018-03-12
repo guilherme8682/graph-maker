@@ -1,10 +1,14 @@
 const { Map } = require('./Map')
-const { dialog, getCurrentWindow } = require('electron').remote
+const electron = require('electron')
+const { dialog, getCurrentWindow, BrowserWindow} = electron.remote
+const { ipcRenderer } = electron
+const url = require('url')
+const path = require('path')
 
 function events(canvas){
     let map
     let searchMethod = document.getElementById('SearchMethod')
-    let buttonFind = document.getElementById('find')    
+    let findButton = document.getElementById('find')    
     let drawingMethod = document.getElementById('drawingMethod')    
     let obstacleIntensity = document.getElementById('obstacleIntensity')    
     let mapNameField = document.getElementById('mapNameField')
@@ -29,25 +33,37 @@ function events(canvas){
         map.saveMap(path,name)
         alert('Map save as "' + name + '.net" and "' + name + '.json"\n in ' + path)
     }
-    let createMap = () => {
-        map = new Map(canvas, 400)                
-        buttonFind.innerText = 'Find'
+    let createMap = (size) => {
+        map = new Map(canvas, size)                
+        findButton.innerText = 'Find'
         mapNameField.value = ''
         map.activeDrawingMethod(drawingMethod.value)
         map.setObstacleIntensity(Number(obstacleIntensity.value))
+        /*
+        newMapWindow = new BrowserWindow({
+            width: 400, 
+            height: 400
+        })
+        mainWindow.loadURL( url.format({
+            pathname: path.join('./', 'mainWindow.html'),
+            protocol: 'file',
+            slashes: true
+        }))*/
+
+
     }    
-    createMap()
+    createMap(400)
     window.addEventListener('resize', () => {
         map.refreshScreen()
     })
-    buttonFind.addEventListener('click',() => {
-        if(buttonFind.innerText == 'Find'){
+    findButton.addEventListener('click',() => {
+        if(findButton.innerText == 'Find'){
             map.activeSearchMethod(searchMethod.value)
-            buttonFind.innerText = 'Stop'
+            findButton.innerText = 'Stop'
         }
         else{
             map.disableSearchMethod()
-            buttonFind.innerText = 'Find'
+            findButton.innerText = 'Find'
         }
     })
     drawingMethod.addEventListener('change', () => {
@@ -57,7 +73,7 @@ function events(canvas){
         else
             document.getElementById('obstacleIntensityField').hidden = true
     })
-    canvas.addEventListener('click', (click) => {
+    canvas.addEventListener('mousedown', (click) => {
         map.clickEvent(click)
     })
     obstacleIntensity.addEventListener('change', () =>{
@@ -66,7 +82,7 @@ function events(canvas){
     mapNameField.addEventListener('keypress', (button) => {
         let char = button.char || button.charCode || button.which;
         if(char == 13) // 13 = Enter
-        saveMap()
+            saveMap()
     })
     document.getElementById('readButton').addEventListener('click', () => {
         let path = dialog.showOpenDialog({
@@ -84,22 +100,29 @@ function events(canvas){
         try {
             map = new Map(canvas, path)
             document.getElementById('mapNameField').value = map.name
-            buttonFind.innerText = 'Find'
+            findButton.innerText = 'Find'
             map.activeDrawingMethod(drawingMethod.value)
             map.setObstacleIntensity(Number(obstacleIntensity.value))
         }
         catch (error) {
-            alert('Arquivo não encontrado')
+            alert('Could not open file')
             console.log(error)
         }
     })
     document.getElementById('saveButton').addEventListener('click', saveMap)     
-    document.getElementById('newFileButton').addEventListener('click', createMap)
+    document.getElementById('newFileButton').addEventListener('click', () => {
+        let size = 9
+        ipcRenderer.send('setupNewMap')
+    })
     document.getElementById('close').addEventListener('click', () => {
-        getCurrentWindow().close()
+        ipcRenderer.send('quit')
     })
     document.getElementById('minimize').addEventListener('click', () => {
         getCurrentWindow().minimize()
+    })
+
+    ipcRenderer.on('createMap', (e,data) => {
+        createMap(data.size)
     })
     return map
 }

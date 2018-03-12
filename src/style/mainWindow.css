@@ -46,8 +46,6 @@ html, body{
     font-family: 'Open Sans', sans-serif;
     font-family: 'Roboto', sans-serif;
     font-family: 'Roboto Slab', serif;
-    min-width: 920px;
-    min-height: 740px;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -61,17 +59,21 @@ html, body{
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
-#navBar{
+.navBar{
     -webkit-user-select: none;
     -webkit-app-region: drag;    
     background-color: #252839;
     height: 65px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 }
+.logoField{
+    margin: 15px 0 0 15px;
+}
+
 .logo{
     margin: 3px;
-    height: 55px;
-    width: 55px;
+    height: 30px;
+    width: 30px;
 }
 .title {
     height: 50px;
@@ -92,7 +94,7 @@ html, body{
     display: table;
 }
 .navButton i{
-    font-size: 40px;
+    font-size: 35px;
     color: white;
     transition: all 0.2s cubic-bezier(.25,.8,.25,1);
     display: table-cell;
@@ -111,14 +113,14 @@ html, body{
 .navInput {
     -webkit-app-region: no-drag;
     height: 50px;
-    margin: 2px 10px 0 10px;    
+    margin: 2px 10px 13px 10px;    
 }
 input[type="text"]{
     font-family: 'Open Sans', sans-serif;
     font-family: 'Roboto', sans-serif;
     font-family: 'Roboto Slab', serif;
 }
-#navBar input[type="text"]{
+.navBar input[type="text"]{
     margin: 8px;
     height: 40px;
     padding: 0 10px 0 10px;
@@ -128,16 +130,16 @@ input[type="text"]{
     border-radius: 10px;
     transition: all 0.5s cubic-bezier(.25,.8,.25,1);
 }
-#navBar input[type="text"]:hover{
+.navBar input[type="text"]:hover{
     background-color: rgba(255, 255, 255, 0.1);
     transition: all 0.5s cubic-bezier(.25,.8,.25,1);
 }
-#navBar input[type="text"]:focus{
+.navBar input[type="text"]:focus{
     background-color: rgba(255, 255, 255, 0.1);
     transition: all 0.5s cubic-bezier(.25,.8,.25,1);
 }
-#navBar input[type="text"]::placeholder{
-    color: LightGray;
+.navBar input[type="text"]::placeholder{
+    color: Gray;
 }
 p, select, button, input{
     width: 100%;
@@ -171,7 +173,7 @@ button:active{
     margin: 10%;
     width: 80%;
 }
-#controllerContainer{
+.controllerContainer{
     float: left;
     background-color: #f2b632;
     height: calc(100% - 55px);
@@ -179,10 +181,9 @@ button:active{
     box-shadow: 0 25px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 #canvasContainer{
-    min-width: 550px;
-    height: calc(100% - 80px);
+    height: calc(100% - 60px);
+    width: calc(100% - 250px);
     float: right;
-    width: calc(100% - 260px);
 }
 canvas{            
     position: relative;
@@ -201,4 +202,35 @@ input[type='range']::-webkit-slider-thumb {
     border-radius: 15px;
     height:25px;
     width:25px;
+}
+
+
+.setupMenu{
+    float: left;
+    background-color: #f2b632;
+    height: calc(100% - 130px);
+    width: 400px;
+}
+
+.controllBar{
+    float: left;
+    width: 100%;
+    height: 65px;;
+    background-color: #252839;
+}
+
+#size{
+    padding: 0 10px 0 10px;
+    width: 230px;
+    margin: 0 10px 0 10px;
+}
+
+.warning{
+    padding: 5px;
+    text-align: center;
+    background-color: #f92743;
+    color: white;
+    width: 100%;
+    height: 25px;
+    border-radius: 10px;
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <title>Make graphs with Electron</title>
+    <link rel="stylesheet" href="style/mainWindow.css">
+</head>
+<body>
+    <div class="navBar">
+        <div class="logoField left">
+            <img class="logo" src="style/icon/logo.ico" alt="">
+        </div>
+        <div class="title left">
+            <p>Setup new map</p>
+        </div>
+        <div class="navButton right">
+                <i id="close" class="material-icons">close</i>
+        </div>
+        <div class="navButton right">
+                <i id="minimize" class="material-icons">remove</i>
+        </div>
+    </div>
+
+    <div class="setupMenu">
+        <div class="option">
+            <b>Size:</b> <input id="size" type="number">
+        </div>
+        <div class="option">
+            <div class="warning" id="warning" hidden="true">
+                You need to fill in the size field
+            </div>
+        </div>
+    </div>
+    <div class="controllBar">
+        <div class="navButton right">
+                <i id="send" class="material-icons">arrow_forward</i>
+        </div>
+    </div>
+    
+</body>
+<script>
+    const { events } = require('./setupMapWindowEvents')
+    events()
+
+</script>
+</html>

@@ -106,10 +106,10 @@ module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canv
         this.refreshScreen()
     }
     refreshScreen(fristTime){
-        let height = window.innerHeight - 100,
-            width = window.innerWidth - 300,
+        let height = window.innerHeight - 80,
+            width = window.innerWidth - 270,
             resolution = height < width ? height : width
-        if(resolution < 600)
+        if(resolution < 430)
             resolution = 600        
         if(this.resolution == resolution)        
             return
@@ -166,7 +166,7 @@ module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canv
         for(let i = 0; i < this.numberOfBlocks; ++i){
             nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
             this.drawSquare(i,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')')
-        }        
+        }
         this.drawSquare(this.originPoint, 'LawnGreen')
         this.drawSquare(this.destinyPoint, 'DodgerBlue')
         if(this.currentSearch)
