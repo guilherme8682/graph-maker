@@ -34,23 +34,12 @@ function events(canvas){
         alert('Map save as "' + name + '.net" and "' + name + '.json"\n in ' + path)
     }
     let createMap = (size) => {
+        map = null
         map = new Map(canvas, size)                
         findButton.innerText = 'Find'
         mapNameField.value = ''
         map.activeDrawingMethod(drawingMethod.value)
         map.setObstacleIntensity(Number(obstacleIntensity.value))
-        /*
-        newMapWindow = new BrowserWindow({
-            width: 400, 
-            height: 400
-        })
-        mainWindow.loadURL( url.format({
-            pathname: path.join('./', 'mainWindow.html'),
-            protocol: 'file',
-            slashes: true
-        }))*/
-
-
     }    
     createMap(400)
     window.addEventListener('resize', () => {
@@ -73,9 +62,18 @@ function events(canvas){
         else
             document.getElementById('obstacleIntensityField').hidden = true
     })
-    canvas.addEventListener('mousedown', (click) => {
-        map.clickEvent(click)
+    let clicked = false
+    canvas.addEventListener('mousedown', () => {
+        clicked = true
     })
+    canvas.addEventListener('mouseup', () => {
+        clicked = false
+    })
+    canvas.addEventListener('mousemove', (click) => {
+        if(clicked)
+            map.clickEvent(click)
+    })
+
     obstacleIntensity.addEventListener('change', () =>{
         map.setObstacleIntensity(Number(obstacleIntensity.value))
     })
@@ -124,7 +122,6 @@ function events(canvas){
     ipcRenderer.on('createMap', (e,data) => {
         createMap(data.size)
     })
-    return map
 }
 
 module.exports.events = events
