@@ -63,8 +63,9 @@ function events(canvas){
             document.getElementById('obstacleIntensityField').hidden = true
     })
     let clicked = false
-    canvas.addEventListener('mousedown', () => {
+    canvas.addEventListener('mousedown', (click) => {
         clicked = true
+        map.clickEvent(click)
     })
     canvas.addEventListener('mouseup', () => {
         clicked = false
@@ -109,7 +110,6 @@ function events(canvas){
     })
     document.getElementById('saveButton').addEventListener('click', saveMap)     
     document.getElementById('newFileButton').addEventListener('click', () => {
-        let size = 9
         ipcRenderer.send('setupNewMap')
     })
     document.getElementById('close').addEventListener('click', () => {

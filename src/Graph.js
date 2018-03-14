@@ -29,7 +29,7 @@ class Graph{
         this.vertices = []
         for(let i = 0; i < this.size; ++i)
             this.vertices[i] = new Vertex()     
-        this.matrix = new Array(this.size)
+        this.matrix = []
     }
     getCostAdjacency(from, to){
         if(!this.matrix[from] || !this.matrix[from][to])
@@ -45,7 +45,7 @@ class Graph{
             this.removeAdjacency(from, to)
         else{
             if(!this.matrix[from])
-                this.matrix[from] = new Array(this.size)
+                this.matrix[from] = []
             if(this.directed)
                 this.matrix[from][to] = cost
             else{
@@ -89,9 +89,9 @@ class Graph{
                 throw 'Unsupported values'
             let MEMBRO = true
             let NAOMEMBRO = false
-            let caminho = new Array(this.size)
-            let distancia = new Array(this.size)
-            let perm = new Array(this.size)
+            let caminho = []
+            let distancia = []
+            let perm = []
             let corrente, k = s, dc, j = 0
             let menordist, novadist
             //Variaveis de tratamento            
@@ -108,7 +108,7 @@ class Graph{
             while (corrente != t) {
                 menordist = Infinity
                 dc = distancia[corrente]
-                for (let i = 0; i < this.size; i++) {
+                for (let i = 0; i < this.size; ++i) {
                     if (!perm[i]) {
                         novadist = dc + this.getCostAdjacency(corrente, i)
                         if (novadist < distancia[i]) {
@@ -155,8 +155,8 @@ class Graph{
         })
         if (this.directed) {
             data += '*Arcs \n'
-            for (let i = 0; i < this.size; i++){
-                for (let j = 0; j < this.size; j++){
+            for (let i = 0; i < this.size; ++i){
+                for (let j = 0; j < this.size; ++j){
                     if (this.getCostAdjacency(i, j) != Infinity){
                         data += (i + 1) + ' ' + (j + 1) + ' ' + this.getCostAdjacency(i, j) + '\n'
                     }
@@ -165,8 +165,8 @@ class Graph{
         }
         else {
             data += '*Edges \n'
-            for (let i = 0; i < this.size; i++){
-                for (let j = i; j < this.size; j++){
+            for (let i = 0; i < this.size; ++i){
+                for (let j = i; j < this.size; ++j){
                     if (this.getCostAdjacency(i, j) != Infinity){
                         data += (i + 1) + ' ' + (j + 1) + ' ' + this.getCostAdjacency(i, j) + '\n'
                     }
@@ -179,12 +179,12 @@ class Graph{
         let data           
         data = readFileSync(fileName + '.net', 'utf8').split('\n')
         this.size = Number(data[0].match(/\d+/)[0])
-        this.matrix = new Array(this.size)
+        this.matrix = []
         let index = 0
         let name = ''
         let currentLine  = 1
         this.vertices = []
-        for(; currentLine < data.length; currentLine++){
+        for(; currentLine < data.length; ++currentLine){
             if(data[currentLine] == '')
                 continue
             if(data[currentLine][0] == '*')
@@ -202,7 +202,7 @@ class Graph{
             throw new Error('Propriedade do arquivo nao compreendida.')        
         
         let fromToCost = []
-        for (currentLine++; currentLine < data.length; currentLine++) {
+        for (currentLine++; currentLine < data.length; ++currentLine) {
             if(data[currentLine] == '')
                 continue
             fromToCost = data[currentLine].split(' ')            

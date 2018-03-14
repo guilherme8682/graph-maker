@@ -1,7 +1,7 @@
 const { Graph } = require('./Graph')
 const { readFileSync, writeFile } = require('fs')
 
-module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:String)
+class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:String)
     constructor(canvas, size){
         if(!canvas)
             throw new Error('Missing parameter in Map.')
@@ -289,3 +289,5 @@ module.exports.Map = class Map{ // Overload: (canvas:Canvas, size:Number), (canv
         this.graph.savePajek(fileName)        
     }
 }
+
+module.exports.Map = Map
