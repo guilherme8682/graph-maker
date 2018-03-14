@@ -1,5 +1,5 @@
 {
-  "name": "makegraphswithelectron",
+  "name": "graphmaker",
   "version": "1.0.0",
   "description": "Visual application to manage graphs with javascript",
   "main": "./src/main.js",
@@ -16,7 +16,7 @@
     "electron-builder": "^20.4.0"
   },
   "build": {
-    "appId": "com.GraphsWithElectron",
+    "appId": "com.GraphMaker",
     "win": {
       "target": "portable",
       "icon": "src/style/icon/logo.ico"
