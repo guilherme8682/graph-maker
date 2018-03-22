@@ -12,6 +12,11 @@ function events(canvas){
     let drawingMethod = document.getElementById('drawingMethod')    
     let obstacleIntensity = document.getElementById('obstacleIntensity')    
     let mapNameField = document.getElementById('mapNameField')
+    let pathSize = document.getElementById('pathSize')
+    let numberVisited = document.getElementById('numberVisited')
+    let obstacleIntensityView = document.getElementById('obstacleIntensityView')
+    let clicked = false
+    
     let saveMap = () => {
         let name = mapNameField.value
         if(name == ''){
@@ -33,26 +38,45 @@ function events(canvas){
         map.saveMap(path,name)
         alert('Map save as "' + name + '.net" and "' + name + '.json"\n in ' + path)
     }
+    let changeDate = (pathNum, visistedNum) => {
+        pathSize.innerHTML = pathNum
+        numberVisited.innerHTML = visistedNum
+    }
     let createMap = (size) => {
         map = null
         map = new Map(canvas, size)                
         findButton.innerText = 'Find'
         mapNameField.value = ''
         map.activeDrawingMethod(drawingMethod.value)
-        map.setObstacleIntensity(Number(obstacleIntensity.value))
-    }    
-    createMap(400)
+        map.setObstacleIntensity(Number(obstacleIntensity.value))        
+        map.setSendSearchData(changeDate.bind(this))
+    }
+
+    obstacleIntensityView.addEventListener('input', () => {
+        let value = obstacleIntensityView.value
+        if(obstacleIntensityView.value > 100)
+            obstacleIntensityView.value = 100
+        else if(obstacleIntensityView < 1)
+            obstacleIntensityView.value = 1
+        obstacleIntensity.value = value
+    })
+    searchMethod.addEventListener('change', () => {
+        map.activeSearchMethod(searchMethod.value)
+    })
+    createMap(9)
     window.addEventListener('resize', () => {
         map.refreshScreen()
     })
     findButton.addEventListener('click',() => {
         if(findButton.innerText == 'Find'){
-            map.activeSearchMethod(searchMethod.value)
             findButton.innerText = 'Stop'
+            map.searchEnable = true
+            map.drawMap()
         }
         else{
-            map.disableSearchMethod()
             findButton.innerText = 'Find'
+            map.searchEnable = false
+            map.drawMap()
         }
     })
     drawingMethod.addEventListener('change', () => {
@@ -62,7 +86,6 @@ function events(canvas){
         else
             document.getElementById('obstacleIntensityField').hidden = true
     })
-    let clicked = false
     canvas.addEventListener('mousedown', (click) => {
         clicked = true
         map.clickEvent(click)
@@ -74,9 +97,10 @@ function events(canvas){
         if(clicked)
             map.clickEvent(click)
     })
-
-    obstacleIntensity.addEventListener('change', () =>{
-        map.setObstacleIntensity(Number(obstacleIntensity.value))
+    obstacleIntensity.addEventListener('input', () =>{
+        let value = Number(obstacleIntensity.value)
+        map.setObstacleIntensity(value)
+        obstacleIntensityView.value = value
     })
     mapNameField.addEventListener('keypress', (button) => {
         let char = button.char || button.charCode || button.which;
@@ -98,15 +122,17 @@ function events(canvas){
         path = path[0].substr(0, path[0].length - 4)
         try {
             map = new Map(canvas, path)
-            document.getElementById('mapNameField').value = map.name
-            findButton.innerText = 'Find'
-            map.activeDrawingMethod(drawingMethod.value)
-            map.setObstacleIntensity(Number(obstacleIntensity.value))
         }
         catch (error) {
             alert('Could not open file')
             console.log(error)
         }
+        mapNameField.value = map.name
+        findButton.innerText = 'Find'
+        map.activeSearchMethod(searchMethod.value)
+        map.activeDrawingMethod(drawingMethod.value)
+        map.setObstacleIntensity(Number(obstacleIntensity.value))        
+        map.setSendSearchData(changeDate.bind(this))
     })
     document.getElementById('saveButton').addEventListener('click', saveMap)     
     document.getElementById('newFileButton').addEventListener('click', () => {
@@ -118,10 +144,10 @@ function events(canvas){
     document.getElementById('minimize').addEventListener('click', () => {
         getCurrentWindow().minimize()
     })
-
     ipcRenderer.on('createMap', (e,data) => {
         createMap(data.size)
     })
+    return map
 }
 
 module.exports.events = events

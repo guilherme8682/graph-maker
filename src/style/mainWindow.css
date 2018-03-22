@@ -30,6 +30,9 @@
     -moz-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
 }
+b{
+    margin: 5px;
+}
 .right{
     float: right;
 }
@@ -192,19 +195,59 @@ canvas{
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
-input[type='range'] {
+.slider {
     -webkit-appearance: none !important;
     height:7px;
+    margin: 10px 0 0 0;
 }
-input[type='range']::-webkit-slider-thumb {
+.slider::-webkit-slider-thumb {
     -webkit-appearance: none !important;
     background:Crimson;
     border-radius: 15px;
     height:25px;
     width:25px;
 }
-
-
+.option{
+    vertical-align: middle;
+}
+.result{
+    color: #252839;
+    text-align: center;
+    border-radius: 5px;
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
+}
+.result:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
+}
+#obstacleIntensity{
+    width: 80%;
+    float: left;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+#obstacleIntensityView{
+    width: 15%;
+    padding: 0 2px 0 2px;
+    float: right;
+    margin: 0 0 10px 0;
+    background-color: rgba(0,0,0,0);
+    color: white;
+    font-size: 17px;
+    border-radius: 7px;
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
+}
+#obstacleIntensityView:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
+}
+#obstacleIntensityView:focus{
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
+}
 .setupMenu{
     float: left;
     background-color: #f2b632;

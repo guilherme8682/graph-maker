@@ -2,10 +2,7 @@ const url = require('url')
 const path = require('path')
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 
-let setupMapWindow
-
-app.on('ready', () => {
-    
+app.on('ready', () => {    
     mainWindow = new BrowserWindow({
         width: 962, 
         height: 764,
@@ -19,9 +16,8 @@ app.on('ready', () => {
         protocol: 'file',
         slashes: true
     }))
-    //mainWindow.openDevTools()
-    Menu.setApplicationMenu(null)
-
+    mainWindow.openDevTools()
+    //Menu.setApplicationMenu(null)
 })
 
 ipcMain.on('setupNewMap', (e) => {

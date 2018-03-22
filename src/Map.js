@@ -8,11 +8,13 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         this.canvas = canvas
         this.context = canvas.getContext('2d')
         this.name = ''
-        this.currentSearch = null
+        this.currentSearch = this.searchWithDijkstra.bind(this)
         this.currentDrawing = this.setBeginPoint.bind(this)
         this.originPoint = 0
         this.destinyPoint = size - 1
         this.obstacleIntensity = 50
+        this.searchEnable = false
+        this.sendSearchData = null
         if(typeof size == 'number')
             this.makeRandomGraph(size)
         else if(typeof size == 'string')
@@ -126,11 +128,26 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             return
         this.drawMap()
     }
+    setSendSearchData(func){
+        this.sendSearchData = func
+    }
+    proccesSearch(route, visited){
+        this.drawBlocks(visited)
+        this.drawRoute(route)
+        if(this.sendSearchData)
+            this.sendSearchData(route.length, visited.length)
+    }
     searchWithDijkstra(){
-        this.graph.dijkstra(this.originPoint, this.destinyPoint, (rota, visitados) => {
-            this.drawBlocks(visitados)
-            this.drawRoute(rota)
-        })
+        this.graph.dijkstra(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
+    }
+    searchWithBreadth(){
+        this.graph.breadth(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
+    }
+    searchWithGreedy(){
+        this.graph.greedy(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
+    }
+    searchWithAStar(){
+        this.graph.astar(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
     }
     drawBlocks(list){
         if(!list)
@@ -169,7 +186,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         }
         this.drawSquare(this.originPoint, 'LawnGreen')
         this.drawSquare(this.destinyPoint, 'DodgerBlue')
-        if(this.currentSearch)
+        if(this.currentSearch && this.searchEnable)
             this.currentSearch()
     }
     drawSquare(index, color){
@@ -182,7 +199,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         let w = this.blockSize.x * 0.9
         let h = this.blockSize.y * 0.9
         this.context.fillStyle = color
-        this.context.fillRect(x,y,w,h)   
+        this.context.fillRect(x,y,w,h)
     }
     setBeginPoint(click){
         this.originPoint = this.indexFromClick(click)
@@ -196,9 +213,16 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         return Math.floor(click.offsetX / this.blockSize.x) + Math.floor(click.offsetY / this.blockSize.y) * this.numberOfBlocksPerLine
     }
     activeSearchMethod(name){
-        if(name == 'dijkstra'){
+        if(name == '0')
             this.currentSearch = this.searchWithDijkstra.bind(this)
-        }
+        else if(name == '1')
+            this.currentSearch = this.searchWithBreadth.bind(this)
+        else if(name == '2')
+            this.currentSearch = this.searchWithGreedy.bind(this)
+        else if(name == '3')
+            this.currentSearch = this.searchWithAStar.bind(this)
+        else
+            throw new Error('Search method not found.')
         this.drawMap()
     }
     activeDrawingMethod(name){

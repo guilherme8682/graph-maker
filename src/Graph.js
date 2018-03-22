@@ -83,70 +83,266 @@ class Graph{
         console.log('All vertex::\n')
         this.vertices.forEach((vertex, index) => console.log('index:',index,'name:',vertex.getName()))
     }
-    dijkstra(s, t, callback){
-        try {
-            if(s < 0 || t >= this.size)
-                throw 'Unsupported values'
-            let MEMBRO = true
-            let NAOMEMBRO = false
-            let caminho = []
-            let distancia = []
-            let perm = []
-            let corrente, k = s, dc, j = 0
-            let menordist, novadist
-            //Variaveis de tratamento            
-            let g = t, rota = [t], cont = 0, visitados = []
-            //inicialização
-            for (let i = 0; i < this.size; ++i) {
-                perm[i] = NAOMEMBRO
-                distancia[i] = Infinity
-                caminho[i] = -1
-            }
-            perm[s] = MEMBRO
-            distancia[s] = 0
-            corrente = s
-            while (corrente != t) {
-                menordist = Infinity
-                dc = distancia[corrente]
-                for (let i = 0; i < this.size; ++i) {
-                    if (!perm[i]) {
-                        novadist = dc + this.getCostAdjacency(corrente, i)
-                        if (novadist < distancia[i]) {
+    neighbors(vertex){
+        let list = []
+        for(let i = 0; i < this.size; ++i)
+            if(this.getCostAdjacency(vertex, i) != Infinity)
+                list.push(i)        
+        return list
+    }
+    dijkstraJS(){
 
-                            distancia[i] = novadist
-                            caminho[i] = corrente
-                        }
-                        if (distancia[i] < menordist) {
-                            menordist = distancia[i]
-                            k = i
-                        }
+
+    }
+
+    dijkstra(s, t, callback){
+        if(s < 0 || t >= this.size)
+            throw 'Unsupported values'
+        let MEMBRO = true
+        let NAOMEMBRO = false
+        let caminho = []
+        let distancia = []
+        let perm = []
+        let corrente, k = s, dc, j = 0
+        let menordist, novadist
+        //Variaveis de tratamento            
+        let g = t, rota = [t], cont = 0, visitados = []
+        //inicialização
+        for (let i = 0; i < this.size; ++i) {
+            perm[i] = NAOMEMBRO
+            distancia[i] = Infinity
+            caminho[i] = -1
+        }
+        perm[s] = MEMBRO
+        distancia[s] = 0
+        corrente = s
+        while (corrente != t) {
+            menordist = Infinity
+            dc = distancia[corrente]
+            for (let i = 0; i < this.size; ++i) {
+                if (!perm[i]) {
+                    novadist = dc + this.getCostAdjacency(corrente, i)
+                    if (novadist < distancia[i]) {
+
+                        distancia[i] = novadist
+                        caminho[i] = corrente
+                    }
+                    if (distancia[i] < menordist) {
+                        menordist = distancia[i]
+                        k = i
                     }
                 }
-                if(corrente == k){  //Busca impossivel
-                    rota = []
-                    g = s
-                    break
+            }
+            if(corrente == k){  //Busca impossivel
+                rota = []
+                g = s
+                break
+            }
+            corrente = k
+            perm[corrente] = MEMBRO
+        }
+        //Tratando resultados
+        while(g != s && cont < this.size){
+            rota.unshift(caminho[g])
+            g = caminho[g]
+            cont++
+        }
+        perm.forEach( (item, index) => {
+            if(item)
+                visitados.push(index)
+        })
+        if(callback)                
+            callback(rota, visitados)
+        return caminho
+    }
+    
+    breadth(s, t, callback){
+        if(s < 0 || t >= this.size)
+            throw 'Unsupported values'
+        let MEMBRO = true
+        let NAOMEMBRO = false
+        let caminho = []
+        let distancia = []
+        let perm = []
+        let corrente, k = s, dc, j = 0
+        let menordist, novadist
+        //Variaveis de tratamento            
+        let g = t, rota = [t], cont = 0, visitados = []
+        //inicialização
+        for (let i = 0; i < this.size; ++i) {
+            perm[i] = NAOMEMBRO
+            distancia[i] = Infinity
+            caminho[i] = -1
+        }
+        perm[s] = MEMBRO
+        distancia[s] = 0
+        corrente = s
+        while (corrente != t) {
+            menordist = Infinity
+            dc = distancia[corrente]
+            for (let i = 0; i < this.size; ++i) {
+                if (!perm[i]) {
+                    novadist = dc + (this.getCostAdjacency(corrente, i) == Infinity ? Infinity : 1)
+                    if (novadist < distancia[i]) {
+
+                        distancia[i] = novadist
+                        caminho[i] = corrente
+                    }
+                    if (distancia[i] < menordist) {
+                        menordist = distancia[i]
+                        k = i
+                    }
                 }
-                corrente = k
-                perm[corrente] = MEMBRO
             }
-            //Tratando resultados
-            while(g != s && cont < this.size){
-                rota.unshift(caminho[g])
-                g = caminho[g]
-                cont++
+            if(corrente == k){  //Busca impossivel
+                rota = []
+                g = s
+                break
             }
-            perm.forEach( (item, index) => {
-                if(item)
-                    visitados.push(index)
-            })
-            if(callback)                
-                callback(rota, visitados)
-            return caminho
+            corrente = k
+            perm[corrente] = MEMBRO
         }
-        catch (error) {
-            throw(new Error(error))
+        //Tratando resultados
+        while(g != s && cont < this.size){
+            rota.unshift(caminho[g])
+            g = caminho[g]
+            cont++
         }
+        perm.forEach( (item, index) => {
+            if(item)
+                visitados.push(index)
+        })
+        if(callback)                
+            callback(rota, visitados)
+        return caminho
+    }
+    
+    heuristic(from, to){
+        //Manhattan distance on a square grid
+        //Specific to a map structure
+        let length = Math.ceil(Math.sqrt(this.size))
+        let a = {x: from % length,y: Math.floor(from / length)}
+        let b = {x: to % length,y: Math.floor(to / length)}
+        return Math.abs(a.x - b.x) + Math.abs(a.y - b.y)
+    }    
+    greedy(s, t, callback){        
+        if(s < 0 || t >= this.size)
+            throw 'Unsupported values'
+        let MEMBRO = true
+        let NAOMEMBRO = false
+        let caminho = []
+        let distancia = []
+        let perm = []
+        let corrente, k = s, dc, j = 0
+        let menordist, novadist
+        //Variaveis de tratamento            
+        let g = t, rota = [t], cont = 0, visitados = []
+        //inicialização
+        for (let i = 0; i < this.size; ++i) {
+            perm[i] = NAOMEMBRO
+            distancia[i] = Infinity
+            caminho[i] = -1
+        }
+        perm[s] = MEMBRO
+        distancia[s] = this.heuristic(s, t)
+        corrente = s
+        while (corrente != t) {
+            menordist = Infinity
+            dc = distancia[corrente]
+            for (let i = 0; i < this.size; ++i) {
+                if (!perm[i]) {
+                    novadist = (this.getCostAdjacency(corrente, i) == Infinity ? Infinity : this.heuristic(i, t))
+                    if (novadist < distancia[i]) {
+                        distancia[i] = novadist
+                        caminho[i] = corrente
+                    }
+                    if (distancia[i] < menordist) {
+                        menordist = distancia[i]
+                        k = i
+                    }
+                }
+            }
+            if(corrente == k){  //Busca impossivel
+                rota = []
+                g = s
+                break
+            }
+            corrente = k
+            perm[corrente] = MEMBRO
+        }
+        //Tratando resultados
+        while(g != s && cont < this.size){
+            rota.unshift(caminho[g])
+            g = caminho[g]
+            cont++
+        }
+        perm.forEach( (item, index) => {
+            if(item)
+                visitados.push(index)
+        })
+        if(callback)                
+            callback(rota, visitados)
+        return caminho
+    }    
+    astar(s, t, callback){
+        if(s < 0 || t >= this.size)
+            throw 'Unsupported values'
+        let MEMBRO = true
+        let NAOMEMBRO = false
+        let caminho = []
+        let distancia = []
+        let perm = []
+        let corrente, k = s, dc, j = 0
+        let menordist, novadist
+        //Variaveis de tratamento            
+        let g = t, rota = [t], cont = 0, visitados = []
+        //inicialização
+        for (let i = 0; i < this.size; ++i) {
+            perm[i] = NAOMEMBRO
+            distancia[i] = Infinity
+            caminho[i] = -1
+        }
+        perm[s] = MEMBRO
+        distancia[s] = 0
+        corrente = s
+        while (corrente != t) {
+            menordist = Infinity
+            dc = distancia[corrente]
+            for (let i = 0; i < this.size; ++i) {
+                if (!perm[i]) {
+                    novadist =  dc + (this.getCostAdjacency(corrente, i) == Infinity ? Infinity : this.heuristic(i, t))
+                    if (novadist < distancia[i]) {
+
+                        distancia[i] = novadist
+                        caminho[i] = corrente
+                    }
+                    if (distancia[i] < menordist) {
+                        menordist = distancia[i]
+                        k = i
+                    }
+                }
+            }
+            if(corrente == k){  //Busca impossivel
+                rota = []
+                g = s
+                break
+            }
+            corrente = k
+            perm[corrente] = MEMBRO
+        }
+        //Tratando resultados
+        while(g != s && cont < this.size){
+            rota.unshift(caminho[g])
+            g = caminho[g]
+            cont++
+        }
+        perm.forEach( (item, index) => {
+            if(item)
+                visitados.push(index)
+        })
+        if(callback)                
+            callback(rota, visitados)
+        return caminho
     }
     savePajek(fileName){
         let data = '*Vertices  ' + this.size + '\n';
