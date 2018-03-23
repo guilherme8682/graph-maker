@@ -64,16 +64,21 @@
         </div>
         <div class="option">
             <p>Path size: </p><p class="result" id="pathSize">--</p>
+            <p>Path cost: </p><p class="result" id="pathCost">--</p>
             <p>Number of visited: </p><p class="result" id="numberVisited">--</p>
         </div>
     </div>    
     <div id="canvasContainer">
-        <canvas id="graphViewer"></canvas>
+        <canvas id="graphViewerLayer1"></canvas>
+        <canvas id="graphViewerLayer2"></canvas>
+        <canvas id="graphViewerLayer3"></canvas>
     </div>
 </body>
 <script>
     const { events } = require('./mainWindowEvents')
-    let canvas = document.getElementById('graphViewer')
-    let map = events(canvas)
+    let canvasL1 = document.getElementById('graphViewerLayer1')
+    let canvasL2 = document.getElementById('graphViewerLayer2')
+    let canvasL3 = document.getElementById('graphViewerLayer3')
+    let map = events([canvasL1,canvasL2,canvasL3])
 </script>
 </html>

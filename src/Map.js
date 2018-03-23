@@ -6,7 +6,8 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         if(!canvas)
             throw new Error('Missing parameter in Map.')
         this.canvas = canvas
-        this.context = canvas.getContext('2d')
+        this.context = []
+        this.canvas.forEach(item => this.context.push(item.getContext('2d')))
         this.name = ''
         this.currentSearch = this.searchWithDijkstra.bind(this)
         this.currentDrawing = this.setBeginPoint.bind(this)
@@ -21,7 +22,9 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             this.loadGraphFromFile(size)
         else
             throw new Error('Missing parameter in Map.')
-        this.drawMap()
+        this.drawL1()
+        this.drawL2()
+        this.drawL3()
     }
     makeRandomGraph(size){
         this.numberOfBlocks = size
@@ -117,16 +120,21 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             return
         else
             this.resolution = resolution
-        this.canvas.height = this.resolution
-        this.canvas.width = this.resolution
+        this.canvas.forEach(item => {
+            item.height = this.resolution
+            item.width = this.resolution
+        })
         this.numberOfBlocksPerLine = Math.ceil(Math.sqrt(this.numberOfBlocks))
         this.blockSize = {
-            x:  canvas.width / this.numberOfBlocksPerLine,
-            y: canvas.height / this.numberOfBlocksPerLine
+            x:  this.canvas[0].width / this.numberOfBlocksPerLine,
+            y: this.canvas[0].height / this.numberOfBlocksPerLine
+            
         }
         if(fristTime)
             return
-        this.drawMap()
+        this.drawL1()
+        this.drawL2()
+        this.drawL3()
     }
     setSendSearchData(func){
         this.sendSearchData = func
@@ -134,8 +142,9 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
     proccesSearch(route, visited){
         this.drawBlocks(visited)
         this.drawRoute(route)
+        let pathCost = route.reduce((before, current) => before + this.costVertices[current],0)
         if(this.sendSearchData)
-            this.sendSearchData(route.length, visited.length)
+            this.sendSearchData(route.length, pathCost, visited.length)
     }
     searchWithDijkstra(){
         this.graph.dijkstra(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
@@ -152,44 +161,47 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
     drawBlocks(list){
         if(!list)
             return
-        list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)'))
+        list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)', 2))
     }
     drawRoute(list){
         let current = {
             x: (list[0] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
             y: (Math.floor(list[0] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
         }
-        this.context.strokeStyle = 'white'
-        this.context.lineCap="round"
-        this.context.lineWidth = this.blockSize.x / 4
-        this.context.beginPath()
-        this.context.moveTo(current.x, current.y)
+        this.context[2].strokeStyle = 'white'
+        this.context[2].lineCap="round"
+        this.context[2].lineWidth = this.blockSize.x / 4
+        this.context[2].beginPath()
+        this.context[2].moveTo(current.x, current.y)
         for (let i = 1; i < list.length; i++) {
             current = {
                 x: (list[i] % this.numberOfBlocksPerLine * this.blockSize.x) + (this.blockSize.x / 2),
                 y: (Math.floor(list[i] / this.numberOfBlocksPerLine) * this.blockSize.y) + (this.blockSize.y / 2)
             }
-            this.context.lineTo(current.x, current.y)
+            this.context[2].lineTo(current.x, current.y)
         }        
-        this.context.stroke()
+        this.context[2].stroke()
     }
-    drawBackGround(){
-        this.context.fillStyle = '#b5b5b7'
-        this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
-    }
-    drawMap(){
-        this.drawBackGround()
+    drawL1(){
         let nColor = 0
+        this.context[0].clearRect(0, 0, this.canvas[0].width, this.canvas[0].height)
         for(let i = 0; i < this.numberOfBlocks; ++i){
             nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
-            this.drawSquare(i,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')')
-        }
-        this.drawSquare(this.originPoint, 'LawnGreen')
-        this.drawSquare(this.destinyPoint, 'DodgerBlue')
+            this.drawSquare(i,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
+        }        
+    }
+    drawL2(){
+        this.context[1].clearRect(0, 0, this.canvas[1].width, this.canvas[1].height)
+        this.drawSquare(this.originPoint, 'LawnGreen', 1)
+        this.drawSquare(this.destinyPoint, 'DodgerBlue', 1)
+    }
+    drawL3(){
+        this.context[2].clearRect(0, 0, this.canvas[2].width, this.canvas[2].height)
         if(this.currentSearch && this.searchEnable)
             this.currentSearch()
     }
-    drawSquare(index, color){
+
+    drawSquare(index, color, layer){
         let origin = {
             x: (index % this.numberOfBlocksPerLine * this.blockSize.x),
             y: (Math.floor(index / this.numberOfBlocksPerLine) * this.blockSize.y)
@@ -198,16 +210,18 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         let y = this.blockSize.y * 0.05 + origin.y
         let w = this.blockSize.x * 0.9
         let h = this.blockSize.y * 0.9
-        this.context.fillStyle = color
-        this.context.fillRect(x,y,w,h)
+        this.context[layer].fillStyle = color
+        this.context[layer].fillRect(x,y,w,h)
     }
     setBeginPoint(click){
         this.originPoint = this.indexFromClick(click)
-        this.drawMap()
+        this.drawL2()
+        this.drawL3()
     }
     setDestinationPoint(click){
         this.destinyPoint = this.indexFromClick(click)
-        this.drawMap()
+        this.drawL2()
+        this.drawL3()
     }
     indexFromClick(click){
         return Math.floor(click.offsetX / this.blockSize.x) + Math.floor(click.offsetY / this.blockSize.y) * this.numberOfBlocksPerLine
@@ -223,7 +237,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             this.currentSearch = this.searchWithAStar.bind(this)
         else
             throw new Error('Search method not found.')
-        this.drawMap()
+        this.drawL3()
     }
     activeDrawingMethod(name){
         if(name == 'beginPoint')
@@ -297,11 +311,13 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
                 this.graph.createAdjacency(index-this.numberOfBlocksPerLine, index, this.costVertices[index])
             }
         }
-        this.drawMap()
+        let nColor = this.costVertices[index] == Infinity ? 0:Math.floor((100 - this.costVertices[index]) / 100 * 255)
+        this.drawSquare(index,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
+        this.drawL3()
     }
     disableSearchMethod(){
         this.currentSearch = null
-        this.drawMap()
+        this.drawL3()
     }
     saveMap(fileName, mapName){
         let data = JSON.stringify({

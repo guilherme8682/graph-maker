@@ -187,6 +187,7 @@ button:active{
     height: calc(100% - 60px);
     width: calc(100% - 250px);
     float: right;
+    position: relative;
 }
 canvas{            
     position: relative;
@@ -248,6 +249,11 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: rgba(255, 255, 255, 0.3);
     transition: all 0.5s cubic-bezier(.25,.8,.25,1);
 }
+canvas{
+    position: absolute;
+}
+
+
 .setupMenu{
     float: left;
     background-color: #f2b632;
@@ -277,3 +283,4 @@ input[type=number]::-webkit-outer-spin-button {
     height: 25px;
     border-radius: 10px;
 }
+
