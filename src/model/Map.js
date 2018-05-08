@@ -161,7 +161,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
     drawBlocks(list){
         if(!list)
             return
-        list.forEach(item => this.drawSquare(item, 'rgba(0,0,0,0.5)', 2))
+        list.forEach(item => this.drawBlock(item, 'rgba(0,0,0,0.5)', 2))
     }
     drawRoute(list){
         let current = {
@@ -187,13 +187,13 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         this.context[0].clearRect(0, 0, this.canvas[0].width, this.canvas[0].height)
         for(let i = 0; i < this.numberOfBlocks; ++i){
             nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
-            this.drawSquare(i,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
+            this.drawBlock(i,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
         }        
     }
     drawL2(){
         this.context[1].clearRect(0, 0, this.canvas[1].width, this.canvas[1].height)
-        this.drawSquare(this.originPoint, 'LawnGreen', 1)
-        this.drawSquare(this.destinyPoint, 'DodgerBlue', 1)
+        this.drawBlock(this.originPoint, 'LawnGreen', 1)
+        this.drawBlock(this.destinyPoint, 'DodgerBlue', 1)
     }
     drawL3(){
         this.context[2].clearRect(0, 0, this.canvas[2].width, this.canvas[2].height)
@@ -201,7 +201,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             this.currentSearch()
     }
 
-    drawSquare(index, color, layer){
+    drawBlock(index, color, layer){
         let origin = {
             x: (index % this.numberOfBlocksPerLine * this.blockSize.x),
             y: (Math.floor(index / this.numberOfBlocksPerLine) * this.blockSize.y)
@@ -312,7 +312,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             }
         }
         let nColor = this.costVertices[index] == Infinity ? 0:Math.floor((100 - this.costVertices[index]) / 100 * 255)
-        this.drawSquare(index,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
+        this.drawBlock(index,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
         this.drawL3()
     }
     disableSearchMethod(){

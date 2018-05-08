@@ -2,12 +2,12 @@
 <html lang="pt">
 <head>
     <title>Make graphs with Electron</title>
-    <link rel="stylesheet" href="style/mainWindow.css">
+    <link rel="stylesheet" href="../style/mainWindow.css">
 </head>
 <body>
     <div class="navBar">
         <div class="logoField left">
-            <img class="logo" src="style/icon/logo.ico" alt="">
+            <img class="logo" src="../style/icon/logo.ico" alt="">
         </div>
         <div class="title left">
             <p>Graph maker</p>
@@ -28,7 +28,10 @@
                 <i id="close" class="material-icons">close</i>
         </div>
         <div class="navButton right">
-                <i id="minimize" class="material-icons">remove</i>
+                <i id="fullScreen" class="material-icons">crop_square</i>
+        </div>
+        <div class="navButton right">
+                <i id="minimize" class="material-icons" style="vertical-align: bottom">remove</i>
         </div>
     </div>
     <div class='controllerContainer'>
@@ -60,7 +63,7 @@
         <div class="option" id="obstacleIntensityField" hidden>
             <p>Obstacle intensity:</p>
             <input type="range" min="1" max="100" value="50" class="slider" id="obstacleIntensity">
-            <input type="number" id="obstacleIntensityView" value="100">
+            <input type="number" id="obstacleIntensityView" value="50">
         </div>
         <div class="option">
             <p>Path size: </p><p class="result" id="pathSize">--</p>

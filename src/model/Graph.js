@@ -310,7 +310,7 @@ class Graph{
             dc = distancia[corrente]
             for (let i = 0; i < this.size; ++i) {
                 if (!perm[i]) {
-                    novadist =  dc + (this.getCostAdjacency(corrente, i) == Infinity ? Infinity : this.heuristic(i, t))
+                    novadist =  dc + this.getCostAdjacency(corrente, i) + this.heuristic(i, t)
                     if (novadist < distancia[i]) {
 
                         distancia[i] = novadist

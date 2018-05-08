@@ -1,4 +1,4 @@
-const { Map } = require('./Map')
+const { Map } = require('./../../model/Map')
 const electron = require('electron')
 const { dialog, getCurrentWindow, BrowserWindow} = electron.remote
 const { ipcRenderer } = electron
@@ -50,18 +50,19 @@ function events(canvas){
         findButton.innerText = 'Find'
         mapNameField.value = ''
         map.activeDrawingMethod(drawingMethod.value)
+        map.activeSearchMethod(searchMethod.value)
         map.setObstacleIntensity(Number(obstacleIntensity.value))        
         map.setSendSearchData(changeDate.bind(this))
         changeDate('--','--','--')
     }
 
     obstacleIntensityView.addEventListener('input', () => {
-        let value = obstacleIntensityView.value
         if(obstacleIntensityView.value > 100)
             obstacleIntensityView.value = 100
-        else if(obstacleIntensityView < 1)
+        else if(obstacleIntensityView.value < 1){
             obstacleIntensityView.value = 1
-        obstacleIntensity.value = value
+        }
+        obstacleIntensity.value = obstacleIntensityView.value
     })
     searchMethod.addEventListener('change', () => {
         map.activeSearchMethod(searchMethod.value)
@@ -147,6 +148,9 @@ function events(canvas){
     })
     document.getElementById('close').addEventListener('click', () => {
         ipcRenderer.send('quit')
+    })
+    document.getElementById('fullScreen').addEventListener('click', () => {
+        getCurrentWindow().maximize()
     })
     document.getElementById('minimize').addEventListener('click', () => {
         getCurrentWindow().minimize()

@@ -9,14 +9,14 @@ app.on('ready', () => {
         resizable: true, 
         frame: false, 
         'minHeight': 620, 
-        'minWidth': 810
+        'minWidth': 860
     })
     mainWindow.loadURL( url.format({
-        pathname: path.join(__dirname, 'mainWindow.html'),
+        pathname: path.join(__dirname, 'views/main/mainWindow.html'),
         protocol: 'file',
         slashes: true
     }))
-    mainWindow.openDevTools()
+    //mainWindow.openDevTools()
     //Menu.setApplicationMenu(null)
 })
 
@@ -28,7 +28,7 @@ ipcMain.on('setupNewMap', (e) => {
         frame: false
     })
     setupMapWindow.loadURL( url.format({
-        pathname: path.join(__dirname, 'setupMapWindow.html'),
+        pathname: path.join(__dirname, 'views/setupMap/setupMapWindow.html'),
         protocol: 'file',
         slashes: true
     }))
@@ -41,3 +41,4 @@ ipcMain.on('quit', () => {
 ipcMain.on('createMap', (e, data) => {
     mainWindow.webContents.send('createMap', data)
 })
+
