@@ -19,26 +19,32 @@ app.on('ready', () => {
     //mainWindow.openDevTools()
     //Menu.setApplicationMenu(null)
 })
-
-ipcMain.on('setupNewMap', (e) => {
-    setupMapWindow = new BrowserWindow({
-        width: 400, 
-        height: 500,
-        resizable: false, 
-        frame: false
-    })
-    setupMapWindow.loadURL( url.format({
-        pathname: path.join(__dirname, 'views/setupMap/setupMapWindow.html'),
-        protocol: 'file',
-        slashes: true
-    }))
-    //setupMapWindow.openDevTools()
-})
-
 ipcMain.on('quit', () => {
     app.quit()
 })
+let enableSetupMap = false
+ipcMain.on('setupNewMap', (e) => {
+    if(!enableSetupMap){
+        enableSetupMap = true
+        setupMapWindow = new BrowserWindow({
+            width: 400, 
+            height: 500,
+            resizable: false, 
+            frame: false
+        })
+        setupMapWindow.loadURL( url.format({
+            pathname: path.join(__dirname, 'views/setupMap/setupMapWindow.html'),
+            protocol: 'file',
+            slashes: true
+        }))
+        //setupMapWindow.openDevTools()
+    }
+})
 ipcMain.on('createMap', (e, data) => {
+    enableSetupMap = false
     mainWindow.webContents.send('createMap', data)
+})
+ipcMain.on('closeSetupMap', () => {
+    enableSetupMap = false
 })
 

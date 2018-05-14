@@ -16,6 +16,8 @@ function events(canvas){
     let pathCost = document.getElementById('pathCost')
     let numberVisited = document.getElementById('numberVisited')
     let obstacleIntensityView = document.getElementById('obstacleIntensityView')
+    let contactMe = document.getElementById('contact-me')
+    let contactMeTrigger = document.getElementById('contact-me-trigger')
     let clicked = false
     
     let saveMap = () => {
@@ -155,6 +157,34 @@ function events(canvas){
     document.getElementById('minimize').addEventListener('click', () => {
         getCurrentWindow().minimize()
     })
+    
+    let contactMeStatus = {trigger: false, content: false}
+    contactMeTrigger.addEventListener('mouseover', () => {
+        contactMeStatus.trigger = true
+        enableContactMe()
+    })
+    contactMeTrigger.addEventListener('mouseout', () => {
+        contactMeStatus.trigger = false
+        disableContactMe()
+    })    
+    contactMe.addEventListener('mouseover', () => {
+        contactMeStatus.content = true
+        enableContactMe()
+    })
+    contactMe.addEventListener('mouseout', () => {
+        contactMeStatus.content = false
+        disableContactMe()
+    })    
+    function enableContactMe(){
+        contactMe.style.bottom = '25px'
+        contactMe.style.opacity = '1'
+    }
+    function disableContactMe(){
+        if(!(contactMeStatus.content || contactMeStatus.trigger)){
+            contactMe.style.bottom = '-150px'
+            contactMe.style.opacity = 0
+        }
+    }
     ipcRenderer.on('createMap', (e,data) => {
         createMap(data.size)
     })    

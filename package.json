@@ -18,8 +18,8 @@
   "build": {
     "appId": "com.GraphMaker",
     "win": {
-      "target": "nsis",
-      "icon": "src/style/icon/logo.ico"
+      "target": "portable",
+      "icon": "src/views/style/icon/logo.ico"
     }
   }
 }

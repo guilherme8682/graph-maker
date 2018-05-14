@@ -1,5 +1,5 @@
 /**{
-    cursor: default;
+
 }*/
 @font-face {
     font-family: Roboto Slab;
@@ -7,7 +7,7 @@
     src: url('fonts/RobotoSlab-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-} 
+}
 @font-face {
     font-family: 'Material Icons';
     font-style: normal;
@@ -46,6 +46,8 @@ body{
     background-color: #b5b5b7;
 }
 html, body{
+    user-select: none;
+    cursor: default;
     background-color: #b5b5b7;
     margin: 0;
     height: 100%;
@@ -55,7 +57,7 @@ html, body{
     font-family: 'Roboto Slab', serif;
 }
 .navBar{
-    -webkit-app-region: drag;    
+    -webkit-app-region: drag;
     background-color: #252839;
     height: 65px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -63,7 +65,6 @@ html, body{
 .logoField{
     margin: 15px 0 0 15px;
 }
-
 .logo{
     margin: 3px;
     height: 30px;
@@ -83,11 +84,11 @@ html, body{
     -webkit-app-region: no-drag;
     height: 55px;
     width: 55px;
-    transition: all 0.5s cubic-bezier(.25,.8,.25,1);  
-
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
     display: table;
 }
 .navButton i{
+    cursor:pointer;
     font-size: 35px;
     color: white;
     transition: all 0.2s cubic-bezier(.25,.8,.25,1);
@@ -107,9 +108,10 @@ html, body{
 .navInput {
     -webkit-app-region: no-drag;
     height: 50px;
-    margin: 2px 10px 13px 10px;    
+    margin: 2px 10px 13px 10px;
 }
 input[type="text"]{
+
     font-family: 'Open Sans', sans-serif;
     font-family: 'Roboto', sans-serif;
     font-family: 'Roboto Slab', serif;
@@ -123,8 +125,8 @@ input[type="text"]{
     font-size: 25px;
     border-radius: 10px;
     transition: all 0.5s cubic-bezier(.25,.8,.25,1);
-    
-    cursor: pointer;
+
+
 }
 .navBar input[type="text"]:hover{
     background-color: rgba(255, 255, 255, 0.1);
@@ -144,9 +146,10 @@ p, select, button, input{
     border: 0;
     border-radius: 2px;
 }
-select, button{            
+select, button{
+    cursor: pointer;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    transition: all 0.2s cubic-bezier(.25,.8,.25,1);
 }
 .material-icons{
     font-size: 23px;
@@ -161,9 +164,16 @@ button{
     color: white;
     border-radius: 6px;
     background-color: Crimson;
+    height: 30px;
+}
+button:hover{
+    box-shadow: 0 2px 2px rgba(0,0,0,0.25), 0 1px 1px rgba(0,0,0,0.22);
+    background-color: rgb(238, 38, 78);
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
 }
 button:active{
-    background-color: white;
+    background-color: rgb(255, 174, 190);
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
 }
 .option{
     margin: 10%;
@@ -182,7 +192,7 @@ button:active{
     float: right;
     position: relative;
 }
-canvas{            
+canvas{
     position: relative;
     left: 50%;
     top: 50%;
@@ -205,6 +215,9 @@ canvas{
     vertical-align: middle;
 }
 .result{
+    padding-top: 5px;
+    user-select: auto;
+    cursor: auto;
     color: #252839;
     text-align: center;
     border-radius: 5px;
@@ -218,10 +231,10 @@ canvas{
     width: 80%;
     float: left;
 }
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 #obstacleIntensityView{
     width: 15%;
@@ -270,7 +283,7 @@ canvas{
 .warning{
     padding: 5px;
     text-align: center;
-    background-color: #f92743;
+    background-color: Crimson;
     color: white;
     width: 100%;
     height: 25px;
@@ -280,10 +293,39 @@ canvas{
 :not(input):not(textarea),
 :not(input):not(textarea)::after,
 :not(input):not(textarea)::before {
+}
+::selection {
     -webkit-user-select: none;
     user-select: none;
-    cursor: default;
-}
+
+    background: rgba(37, 40, 57, 0.432); /* WebKit/Blink Browsers */
+  }
 input, button, textarea, :focus {
     outline: none;
+}
+#contact-me{
+    user-select: auto;
+    cursor: auto;
+    position: absolute;
+    bottom: -150px;
+    left:  25px;
+    width: 220px;
+    height: 90px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: Crimson;
+    color: white;
+    opacity: 0;
+    z-index: 2;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    transition: all 0.5s cubic-bezier(.25,.8,.25,1);
+}
+#contact-me-trigger{
+    position: absolute;
+    left: 195px;
+    bottom: 0px;
+    font-size: 35px;
+}
+#contact-me-trigger i{
+    font-size: 45px;
 }

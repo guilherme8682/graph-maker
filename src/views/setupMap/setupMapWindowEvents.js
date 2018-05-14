@@ -20,6 +20,7 @@ function events(){
     }
 
     document.getElementById('close').addEventListener('click', () => {
+        ipcRenderer.send('closeSetupMap')
         getCurrentWindow().close()
     })
     document.getElementById('minimize').addEventListener('click', () => {
