@@ -3,13 +3,12 @@ const { readFileSync, writeFile } = require('fs')
 
 class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:String)
     constructor(canvas, size){
-        if(!canvas)
+        if(!canvas || !size)
             throw new Error('Missing parameter in Map.')
         this.canvas = canvas
         this.context = []
         this.canvas.forEach(item => this.context.push(item.getContext('2d')))
         this.name = ''
-        this.currentSearch = this.searchWithDijkstra.bind(this)
         this.currentDrawing = this.setBeginPoint.bind(this)
         this.originPoint = 0
         this.destinyPoint = size - 1
@@ -22,6 +21,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             this.loadGraphFromFile(size)
         else
             throw new Error('Missing parameter in Map.')
+        this.currentSearch = this.graph.dijkstra.bind(this.graph)
         this.drawL1()
         this.drawL2()
         this.drawL3()
@@ -139,24 +139,13 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
     setSendSearchData(func){
         this.sendSearchData = func
     }
-    proccesSearch(route, visited){
+    proccesSearch(){
+        let {route, visited} = this.currentSearch(this.originPoint, this.destinyPoint)
         this.drawBlocks(visited)
         this.drawRoute(route)
         let pathCost = route.reduce((before, current) => before + this.costVertices[current],0)
         if(this.sendSearchData)
             this.sendSearchData(route.length, pathCost, visited.length)
-    }
-    searchWithDijkstra(){
-        this.graph.dijkstra(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
-    }
-    searchWithBreadth(){
-        this.graph.breadth(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
-    }
-    searchWithGreedy(){
-        this.graph.greedy(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
-    }
-    searchWithAStar(){
-        this.graph.astar(this.originPoint, this.destinyPoint, this.proccesSearch.bind(this))
     }
     drawBlocks(list){
         if(!list)
@@ -197,8 +186,8 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
     }
     drawL3(){
         this.context[2].clearRect(0, 0, this.canvas[2].width, this.canvas[2].height)
-        if(this.currentSearch && this.searchEnable)
-            this.currentSearch()
+        if(this.proccesSearch && this.searchEnable)
+            this.proccesSearch()
     }
 
     drawBlock(index, color, layer){
@@ -227,14 +216,14 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         return Math.floor(click.offsetX / this.blockSize.x) + Math.floor(click.offsetY / this.blockSize.y) * this.numberOfBlocksPerLine
     }
     activeSearchMethod(name){
-        if(name == '0')
-            this.currentSearch = this.searchWithDijkstra.bind(this)
-        else if(name == '1')
-            this.currentSearch = this.searchWithBreadth.bind(this)
-        else if(name == '2')
-            this.currentSearch = this.searchWithGreedy.bind(this)
-        else if(name == '3')
-            this.currentSearch = this.searchWithAStar.bind(this)
+        if(name == 0)
+            this.currentSearch = this.graph.dijkstra.bind(this.graph)
+        else if(name == 1)
+            this.currentSearch = this.graph.breadth.bind(this.graph)
+        else if(name == 2)
+            this.currentSearch = this.graph.greedy.bind(this.graph)
+        else if(name == 3)
+            this.currentSearch = this.graph.astar.bind(this.graph)
         else
             throw new Error('Search method not found.')
         this.drawL3()

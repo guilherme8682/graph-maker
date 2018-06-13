@@ -8,9 +8,9 @@ const path = require('path')
 function events(canvas){
     let map
     let searchMethod = document.getElementById('SearchMethod')
-    let findButton = document.getElementById('find')    
-    let drawingMethod = document.getElementById('drawingMethod')    
-    let obstacleIntensity = document.getElementById('obstacleIntensity')    
+    let findButton = document.getElementById('find')
+    let drawingMethod = document.getElementById('drawingMethod')
+    let obstacleIntensity = document.getElementById('obstacleIntensity')
     let mapNameField = document.getElementById('mapNameField')
     let pathSize = document.getElementById('pathSize')
     let pathCost = document.getElementById('pathCost')
@@ -19,7 +19,8 @@ function events(canvas){
     let contactMe = document.getElementById('contact-me')
     let contactMeTrigger = document.getElementById('contact-me-trigger')
     let clicked = false
-    
+    let contactMeStatus = {trigger: false, content: false}
+
     let saveMap = () => {
         let name = mapNameField.value
         if(name == ''){
@@ -29,7 +30,7 @@ function events(canvas){
         let path = dialog.showSaveDialog({
                 defaultPath: name,
                 filters: [
-                    {   name: '.net', 
+                    {   name: '.net',
                         extensions: ['net']
                     }
                 ]
@@ -48,22 +49,20 @@ function events(canvas){
     }
     let createMap = (size) => {
         map = null
-        map = new Map(canvas, size)                
+        map = new Map(canvas, size)
         findButton.innerText = 'Find'
         mapNameField.value = ''
         map.activeDrawingMethod(drawingMethod.value)
         map.activeSearchMethod(searchMethod.value)
-        map.setObstacleIntensity(Number(obstacleIntensity.value))        
+        map.setObstacleIntensity(Number(obstacleIntensity.value))
         map.setSendSearchData(changeDate.bind(this))
         changeDate('--','--','--')
     }
-
     obstacleIntensityView.addEventListener('input', () => {
         if(obstacleIntensityView.value > 100)
             obstacleIntensityView.value = 100
-        else if(obstacleIntensityView.value < 1){
+        else if(obstacleIntensityView.value < 1)
             obstacleIntensityView.value = 1
-        }
         obstacleIntensity.value = obstacleIntensityView.value
     })
     searchMethod.addEventListener('change', () => {
@@ -118,9 +117,9 @@ function events(canvas){
     })
     document.getElementById('readButton').addEventListener('click', () => {
         let path = dialog.showOpenDialog({
-                properties: ['openFile'], 
+                properties: ['openFile'],
                 filters: [
-                    {   name: '.net', 
+                    {   name: '.net',
                         extensions: ['net']
                     }
                 ]
@@ -140,11 +139,11 @@ function events(canvas){
         findButton.innerText = 'Find'
         map.activeSearchMethod(searchMethod.value)
         map.activeDrawingMethod(drawingMethod.value)
-        map.setObstacleIntensity(Number(obstacleIntensity.value))        
+        map.setObstacleIntensity(Number(obstacleIntensity.value))
         map.setSendSearchData(changeDate.bind(this))
         changeDate('--','--','--')
     })
-    document.getElementById('saveButton').addEventListener('click', saveMap)     
+    document.getElementById('saveButton').addEventListener('click', saveMap)
     document.getElementById('newFileButton').addEventListener('click', () => {
         ipcRenderer.send('setupNewMap')
     })
@@ -157,8 +156,6 @@ function events(canvas){
     document.getElementById('minimize').addEventListener('click', () => {
         getCurrentWindow().minimize()
     })
-    
-    let contactMeStatus = {trigger: false, content: false}
     contactMeTrigger.addEventListener('mouseover', () => {
         contactMeStatus.trigger = true
         enableContactMe()
@@ -166,7 +163,7 @@ function events(canvas){
     contactMeTrigger.addEventListener('mouseout', () => {
         contactMeStatus.trigger = false
         disableContactMe()
-    })    
+    })
     contactMe.addEventListener('mouseover', () => {
         contactMeStatus.content = true
         enableContactMe()
@@ -174,7 +171,7 @@ function events(canvas){
     contactMe.addEventListener('mouseout', () => {
         contactMeStatus.content = false
         disableContactMe()
-    })    
+    })
     function enableContactMe(){
         contactMe.style.bottom = '25px'
         contactMe.style.opacity = '1'
@@ -187,9 +184,8 @@ function events(canvas){
     }
     ipcRenderer.on('createMap', (e,data) => {
         createMap(data.size)
-    })    
+    })
     createMap(1024)
     return map
 }
-
 module.exports.events = events
