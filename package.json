@@ -11,10 +11,11 @@
   "author": "Guilherme Rocha",
   "license": "ISC",
   "dependencies": {
+  },
+  "devDependencies": {
     "electron": "^2.0.8",
     "electron-builder": "^20.28.2"
   },
-  "devDependencies": {},
   "build": {
     "appId": "com.GraphMaker",
     "win": {
