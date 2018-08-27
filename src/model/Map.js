@@ -15,9 +15,9 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         this.obstacleIntensity = 50
         this.searchEnable = false
         this.sendSearchData = null
-        if(typeof size == 'number')
+        if(size.constructor == Number)
             this.makeRandomGraph(size)
-        else if(typeof size == 'string')
+        else if(size.constructor == String)
             this.loadGraphFromFile(size)
         else
             throw new Error('Missing parameter in Map.')

@@ -16,9 +16,9 @@ class Vertex{
 }
 class Graph{
     constructor(size, directed){ //Overload: (path:String), (size:Number, directed:Boolean)
-        if(typeof size == 'string' && !directed)
+        if(size.constructor == String && !directed)
             this.loadPajek(size)
-        else if(typeof size == 'number' && typeof directed == 'boolean')
+        else if(size.constructor == Number && directed.constructor == Boolean)
             this.makeGraphBy(size, directed)
         else
             throw new Error('Missing parameter in Graph.')
