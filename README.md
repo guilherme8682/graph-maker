@@ -2,7 +2,7 @@
 Desktop applicaton to manage and visualize graph structures. Made with NodeJS + Electron
 
 ### Portable version
-* [Windows 32/64 bit v1.0](https://github.com/Guilherme8482/GraphMaker/raw/master/dist/graphmaker%1.0.0.exe)
+* [Windows 32/64 bit v1.0](https://github.com/Guilherme8482/GraphMaker/raw/master/dist/graphmaker%201.0.0.exe)
 
 ### Getting started
 * Required NodeJS and NPM installed. 
