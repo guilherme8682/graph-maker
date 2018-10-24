@@ -23,7 +23,7 @@ function events(canvas){
 
     let saveMap = () => {
         let name = mapNameField.value
-        if(name == ''){
+        if(name === ''){
             alert('You must choose a name!')
             return
         }
@@ -48,7 +48,7 @@ function events(canvas){
         numberVisited.innerHTML = visistedNum
     }
     let createMap = (size) => {
-        map = null
+        delete map
         map = new Map(canvas, size)
         findButton.innerText = 'Find'
         mapNameField.value = ''
@@ -72,7 +72,7 @@ function events(canvas){
         map.refreshScreen()
     })
     findButton.addEventListener('click',() => {
-        if(findButton.innerText == 'Find'){
+        if(findButton.innerText === 'Find'){
             findButton.innerText = 'Stop'
             map.searchEnable = true
             map.drawL3()
@@ -86,7 +86,7 @@ function events(canvas){
     })
     drawingMethod.addEventListener('change', () => {
         map.activeDrawingMethod(drawingMethod.value)
-        if(drawingMethod.value == 'obstacle')
+        if(drawingMethod.value === 'obstacle')
             document.getElementById('obstacleIntensityField').hidden = false
         else
             document.getElementById('obstacleIntensityField').hidden = true
@@ -112,7 +112,7 @@ function events(canvas){
     })
     mapNameField.addEventListener('keypress', (button) => {
         let char = button.char || button.charCode || button.which;
-        if(char == 13) // 13 = Enter
+        if(char === 13) // 13 = Enter
             saveMap()
     })
     document.getElementById('readButton').addEventListener('click', () => {

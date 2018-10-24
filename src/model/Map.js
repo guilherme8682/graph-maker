@@ -15,9 +15,9 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         this.obstacleIntensity = 50
         this.searchEnable = false
         this.sendSearchData = null
-        if(size.constructor == Number)
+        if(size.constructor === Number)
             this.makeRandomGraph(size)
-        else if(size.constructor == String)
+        else if(size.constructor === String)
             this.loadGraphFromFile(size)
         else
             throw new Error('Missing parameter in Map.')
@@ -35,11 +35,11 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             this.costVertices[i] = Math.floor(Math.random() * 99 + 1)
         for(let i = 0; i < this.numberOfBlocksPerLine; i++){
             let column = i % this.numberOfBlocksPerLine
-            if(column == 0){
+            if(column === 0){
                 this.graph.createAdjacency(i, i+1, this.costVertices[i+1])
                 this.graph.createAdjacency(i, i+this.numberOfBlocksPerLine, this.costVertices[i+this.numberOfBlocksPerLine])
             }
-            else if(column == (this.numberOfBlocksPerLine - 1)){
+            else if(column === (this.numberOfBlocksPerLine - 1)){
                 this.graph.createAdjacency(i, i-1, this.costVertices[i-1])
                 this.graph.createAdjacency(i, i+this.numberOfBlocksPerLine, this.costVertices[i+this.numberOfBlocksPerLine])
             }
@@ -51,12 +51,12 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         }
         for(let i = this.numberOfBlocksPerLine; i  < this.numberOfBlocks - this.numberOfBlocksPerLine; i++){
             let column = i % this.numberOfBlocksPerLine
-            if(column == 0){
+            if(column === 0){
                 this.graph.createAdjacency(i, i+1, this.costVertices[i+1])
                 this.graph.createAdjacency(i, i+this.numberOfBlocksPerLine, this.costVertices[i+this.numberOfBlocksPerLine])
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
             }
-            else if(column == (this.numberOfBlocksPerLine - 1)){
+            else if(column === (this.numberOfBlocksPerLine - 1)){
                 this.graph.createAdjacency(i, i-1, this.costVertices[i-1])
                 this.graph.createAdjacency(i, i+this.numberOfBlocksPerLine, this.costVertices[i+this.numberOfBlocksPerLine])
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
@@ -70,11 +70,11 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         }
         for(let i = this.numberOfBlocks - this.numberOfBlocksPerLine; i < this.numberOfBlocks; i++){
             let column = i % this.numberOfBlocksPerLine
-            if(column == 0){
+            if(column === 0){
                 this.graph.createAdjacency(i, i+1, this.costVertices[i+1])
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
             }
-            else if(column == (this.numberOfBlocksPerLine - 1)){
+            else if(column === (this.numberOfBlocksPerLine - 1)){
                 this.graph.createAdjacency(i, i-1, this.costVertices[i-1])
                 this.graph.createAdjacency(i, i-this.numberOfBlocksPerLine, this.costVertices[i-this.numberOfBlocksPerLine])
             }
@@ -102,7 +102,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         for (let i = 0; i < this.numberOfBlocks; i++) {
             this.costVertices[i] = Infinity
             for (let j = 0; j < this.numberOfBlocks; j++) {
-                if(this.graph.getCostAdjacency(j, i) != Infinity){
+                if(this.graph.getCostAdjacency(j, i) !== Infinity){
                     this.costVertices[i] = this.graph.getCostAdjacency(j, i)
                     break
                 }                
@@ -116,7 +116,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             resolution = height < width ? height : width
         if(resolution < 430)
             resolution = 600        
-        if(this.resolution == resolution)        
+        if(this.resolution === resolution)        
             return
         else
             this.resolution = resolution
@@ -175,7 +175,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         let nColor = 0
         this.context[0].clearRect(0, 0, this.canvas[0].width, this.canvas[0].height)
         for(let i = 0; i < this.numberOfBlocks; ++i){
-            nColor = this.costVertices[i] == Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
+            nColor = this.costVertices[i] === Infinity ? 0:Math.floor((100 - this.costVertices[i]) / 100 * 255)
             this.drawBlock(i,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
         }        
     }
@@ -215,25 +215,26 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
     indexFromClick(click){
         return Math.floor(click.offsetX / this.blockSize.x) + Math.floor(click.offsetY / this.blockSize.y) * this.numberOfBlocksPerLine
     }
-    activeSearchMethod(name){
-        if(name == 0)
+    activeSearchMethod(index){
+        index = Number(index)
+        if(index === 0)
             this.currentSearch = this.graph.dijkstra.bind(this.graph)
-        else if(name == 1)
+        else if(index === 1)
             this.currentSearch = this.graph.breadth.bind(this.graph)
-        else if(name == 2)
+        else if(index === 2)
             this.currentSearch = this.graph.greedy.bind(this.graph)
-        else if(name == 3)
+        else if(index === 3)
             this.currentSearch = this.graph.astar.bind(this.graph)
         else
             throw new Error('Search method not found.')
         this.drawL3()
     }
     activeDrawingMethod(name){
-        if(name == 'beginPoint')
+        if(name === 'beginPoint')
             this.currentDrawing = this.setBeginPoint.bind(this)
-        else if(name == 'destinynPoint')
+        else if(name === 'destinynPoint')
             this.currentDrawing = this.setDestinationPoint.bind(this)
-        else if(name == 'obstacle')
+        else if(name === 'obstacle')
             this.currentDrawing = this.setValueForVertice.bind(this)
     }
     clickEvent(click){
@@ -253,12 +254,12 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
         this.costVertices[index] = value
 
         if(index >= this.numberOfBlocksPerLine && index < (this.numberOfBlocks - this.numberOfBlocksPerLine)){
-            if(column == 0){
+            if(column === 0){
                 this.graph.createAdjacency(index+1, index, this.costVertices[index])
                 this.graph.createAdjacency(index+this.numberOfBlocksPerLine, index, this.costVertices[index])
                 this.graph.createAdjacency(index-this.numberOfBlocksPerLine, index, this.costVertices[index])
             }
-            else if(column == (this.numberOfBlocksPerLine - 1)){
+            else if(column === (this.numberOfBlocksPerLine - 1)){
                 this.graph.createAdjacency(index-1, index, this.costVertices[index])
                 this.graph.createAdjacency(index+this.numberOfBlocksPerLine, index, this.costVertices[index])
                 this.graph.createAdjacency(index-this.numberOfBlocksPerLine, index, this.costVertices[index])
@@ -271,11 +272,11 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             }
         }
         else if(index < this.numberOfBlocksPerLine){
-            if(column == 0){
+            if(column === 0){
                 this.graph.createAdjacency(index + 1, index, this.costVertices[index])
                 this.graph.createAdjacency(index+this.numberOfBlocksPerLine, index, this.costVertices[index])
             }
-            else if(column == (this.numberOfBlocksPerLine - 1)){
+            else if(column === (this.numberOfBlocksPerLine - 1)){
                 this.graph.createAdjacency(index - 1, index, this.costVertices[index])
                 this.graph.createAdjacency(index+this.numberOfBlocksPerLine, index, this.costVertices[index])
             }
@@ -286,11 +287,11 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
             }
         }
         else if(index >= (this.numberOfBlocks - this.numberOfBlocksPerLine)){
-            if(column == 0){
+            if(column === 0){
                 this.graph.createAdjacency(index+1, index, this.costVertices[index])
                 this.graph.createAdjacency(index-this.numberOfBlocksPerLine, index, this.costVertices[index])
             }
-            else if(column == (this.numberOfBlocksPerLine - 1)){
+            else if(column === (this.numberOfBlocksPerLine - 1)){
                 this.graph.createAdjacency(index-1, index, this.costVertices[index])
                 this.graph.createAdjacency(index-this.numberOfBlocksPerLine, index, this.costVertices[index])
             }
@@ -300,7 +301,7 @@ class Map{ // Overload: (canvas:Canvas, size:Number), (canvas:Canvas, fileName:S
                 this.graph.createAdjacency(index-this.numberOfBlocksPerLine, index, this.costVertices[index])
             }
         }
-        let nColor = this.costVertices[index] == Infinity ? 0:Math.floor((100 - this.costVertices[index]) / 100 * 255)
+        let nColor = this.costVertices[index] === Infinity ? 0:Math.floor((100 - this.costVertices[index]) / 100 * 255)
         this.drawBlock(index,'rgb(255,' + (Math.ceil(0.68 * nColor) + 173) + ',' + nColor + ')', 0)
         this.drawL3()
     }

@@ -16,7 +16,7 @@ app.on('ready', () => {
         protocol: 'file',
         slashes: true
     }))
-    //mainWindow.openDevTools()
+    mainWindow.openDevTools()
     //Menu.setApplicationMenu(null)
 })
 ipcMain.on('quit', () => {

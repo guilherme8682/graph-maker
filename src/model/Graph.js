@@ -16,9 +16,9 @@ class Vertex{
 }
 class Graph{
     constructor(size, directed){ //Overload: (path:String), (size:Number, directed:Boolean)
-        if(size.constructor == String && !directed)
+        if(size.constructor === String && !directed)
             this.loadPajek(size)
-        else if(size.constructor == Number && directed.constructor == Boolean)
+        else if(size.constructor === Number && directed.constructor === Boolean)
             this.makeGraphBy(size, directed)
         else
             throw new Error('Missing parameter in Graph.')
@@ -39,13 +39,13 @@ class Graph{
     }
     createAdjacency(from, to, value){
         let cost = Number(value)
-        if(cost == NaN)
+        if(cost === NaN)
             throw new Error('Invalid parameters') 
-        if(cost == Infinity)
+        if(cost === Infinity)
             this.removeAdjacency(from, to)
         else{
             if(!this.matrix[from])
-                this.matrix[from] = []
+                this.matrix[from] = new Uint8Array(this.size)
             if(this.directed)
                 this.matrix[from][to] = cost
             else{
@@ -74,7 +74,7 @@ class Graph{
             line = ''
             for(let j = 0; j < this.size; ++j){
                 currentCost = this.getCostAdjacency(i, j)
-                line += (currentCost == Infinity ? 'I' : currentCost) + ' '
+                line += (currentCost === Infinity ? 'I' : currentCost) + ' '
             }            
             console.log(line)
         }
@@ -86,7 +86,7 @@ class Graph{
     neighbors(vertex){
         let list = []
         for(let i = 0; i < this.size; ++i)
-            if(this.getCostAdjacency(vertex, i) != Infinity)
+            if(this.getCostAdjacency(vertex, i) !== Infinity)
                 list.push(i)        
         return list
     }
@@ -111,7 +111,7 @@ class Graph{
         perm[origin] = MEMBRO
         distancia[origin] = 0
         corrente = origin
-        while (corrente != destiny) {
+        while (corrente !== destiny) {
             menordist = Infinity
             dc = distancia[corrente]
             for (let i = 0; i < this.size; ++i) {
@@ -128,7 +128,7 @@ class Graph{
                     }
                 }
             }
-            if(corrente == k){  //Busca impossivel
+            if(corrente === k){  //Busca impossivel
                 route = []
                 g = origin
                 break
@@ -137,7 +137,7 @@ class Graph{
             perm[corrente] = MEMBRO
         }
         //Tratando resultados
-        while(g != origin && cont < this.size){
+        while(g !== origin && cont < this.size){
             route.unshift(caminho[g])
             g = caminho[g]
             cont++
@@ -170,12 +170,12 @@ class Graph{
         perm[origin] = MEMBRO
         distancia[origin] = 0
         corrente = origin
-        while (corrente != destiny) {
+        while (corrente !== destiny) {
             menordist = Infinity
             dc = distancia[corrente]
             for (let i = 0; i < this.size; ++i) {
                 if (!perm[i]) {
-                    novadist = dc + (this.getCostAdjacency(corrente, i) == Infinity ? Infinity : 1)
+                    novadist = dc + (this.getCostAdjacency(corrente, i) === Infinity ? Infinity : 1)
                     if (novadist < distancia[i]) {
 
                         distancia[i] = novadist
@@ -187,7 +187,7 @@ class Graph{
                     }
                 }
             }
-            if(corrente == k){  //Busca impossivel
+            if(corrente === k){  //Busca impossivel
                 route = []
                 g = origin
                 break
@@ -196,7 +196,7 @@ class Graph{
             perm[corrente] = MEMBRO
         }
         //Tratando resultados
-        while(g != origin && cont < this.size){
+        while(g !== origin && cont < this.size){
             route.unshift(caminho[g])
             g = caminho[g]
             cont++
@@ -237,12 +237,12 @@ class Graph{
         perm[origin] = MEMBRO
         distancia[origin] = this.heuristic(origin, destiny)
         corrente = origin
-        while (corrente != destiny) {
+        while (corrente !== destiny) {
             menordist = Infinity
             dc = distancia[corrente]
             for (let i = 0; i < this.size; ++i) {
                 if (!perm[i]) {
-                    novadist = (this.getCostAdjacency(corrente, i) == Infinity ? Infinity : this.heuristic(i, destiny))
+                    novadist = (this.getCostAdjacency(corrente, i) === Infinity ? Infinity : this.heuristic(i, destiny))
                     if (novadist < distancia[i]) {
                         distancia[i] = novadist
                         caminho[i] = corrente
@@ -253,7 +253,7 @@ class Graph{
                     }
                 }
             }
-            if(corrente == k){  //Busca impossivel
+            if(corrente === k){  //Busca impossivel
                 route = []
                 g = origin
                 break
@@ -262,7 +262,7 @@ class Graph{
             perm[corrente] = MEMBRO
         }
         //Tratando resultados
-        while(g != origin && cont < this.size){
+        while(g !== origin && cont < this.size){
             route.unshift(caminho[g])
             g = caminho[g]
             cont++
@@ -294,7 +294,7 @@ class Graph{
         perm[origin] = MEMBRO
         distancia[origin] = 0
         corrente = origin
-        while (corrente != destiny) {
+        while (corrente !== destiny) {
             menordist = Infinity
             dc = distancia[corrente]
             for (let i = 0; i < this.size; ++i) {
@@ -311,7 +311,7 @@ class Graph{
                     }
                 }
             }
-            if(corrente == k){  //Busca impossivel
+            if(corrente === k){  //Busca impossivel
                 route = []
                 g = origin
                 break
@@ -320,7 +320,7 @@ class Graph{
             perm[corrente] = MEMBRO
         }
         //Tratando resultados
-        while(g != origin && cont < this.size){
+        while(g !== origin && cont < this.size){
             route.unshift(caminho[g])
             g = caminho[g]
             cont++
@@ -340,7 +340,7 @@ class Graph{
             data += '*Arcs \n'
             for (let i = 0; i < this.size; ++i){
                 for (let j = 0; j < this.size; ++j){
-                    if (this.getCostAdjacency(i, j) != Infinity){
+                    if (this.getCostAdjacency(i, j) !== Infinity){
                         data += (i + 1) + ' ' + (j + 1) + ' ' + this.getCostAdjacency(i, j) + '\n'
                     }
                 }
@@ -350,7 +350,7 @@ class Graph{
             data += '*Edges \n'
             for (let i = 0; i < this.size; ++i){
                 for (let j = i; j < this.size; ++j){
-                    if (this.getCostAdjacency(i, j) != Infinity){
+                    if (this.getCostAdjacency(i, j) !== Infinity){
                         data += (i + 1) + ' ' + (j + 1) + ' ' + this.getCostAdjacency(i, j) + '\n'
                     }
                 }
@@ -368,25 +368,25 @@ class Graph{
         let currentLine  = 1
         this.vertices = []
         for(; currentLine < data.length; ++currentLine){
-            if(data[currentLine] == '')
+            if(data[currentLine] === '')
                 continue
-            if(data[currentLine][0] == '*')
+            if(data[currentLine][0] === '*')
                 break
             index = Number(data[currentLine].match(/^\d+/g)[0]) - 1
             name = data[currentLine].match(/".*"/g)[0]
             name = name.substr(1,name.length - 2)
             this.vertices[index] = new Vertex(name)            
         }
-        if(data[currentLine].search(/Arcs/) != -1)
+        if(data[currentLine].search(/Arcs/) !== -1)
             this.directed = true
-        else if(data[currentLine].search(/Edges/) != -1)
+        else if(data[currentLine].search(/Edges/) !== -1)
             this.directed = false
         else
             throw new Error('Propriedade do arquivo nao compreendida.')        
         
         let fromToCost = []
         for (currentLine++; currentLine < data.length; ++currentLine) {
-            if(data[currentLine] == '')
+            if(data[currentLine] === '')
                 continue
             fromToCost = data[currentLine].split(' ')            
             this.createAdjacency(fromToCost[0] - 1, fromToCost[1] - 1, fromToCost[2])            
