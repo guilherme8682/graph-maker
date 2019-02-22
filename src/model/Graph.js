@@ -2,16 +2,7 @@ const { writeFileSync, readFileSync } = require('fs')
 
 class Vertex{
     constructor(name){
-        if(name)
-            this.setName(name)
-        else
-            this.setName('')
-    }
-    getName(){
-        return this.name
-    }
-    setName(name){
-        this.name = name
+        this.name = name || ''
     }
 }
 class Graph{
