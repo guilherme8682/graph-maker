@@ -1,8 +1,0 @@
-directories:
-  output: dist
-  buildResources: build
-appId: com.GraphMaker
-win:
-  target: portable
-  icon: src/views/style/icon/logo.ico
-electronVersion: 4.0.5
