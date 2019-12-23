@@ -1,0 +1,12 @@
+.button-readfile {
+	height: 100%;
+	width: 55px;
+	opacity: 0;
+}
+.button-readfile-container > * {
+	position: absolute;
+}
+.button-readfile-container {
+	width: 55px;
+	height: 55px;
+}

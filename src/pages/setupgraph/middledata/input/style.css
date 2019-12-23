@@ -1,0 +1,31 @@
+input[type='text'] {
+	font-family: 'Open Sans', sans-serif;
+	font-family: 'Roboto', sans-serif;
+	font-family: 'Roboto Slab', serif;
+}
+p,
+select,
+button,
+input {
+	width: 100%;
+	outline: none;
+	height: 28px;
+	border: 0;
+	border-radius: 2px;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+.squarerootinput-size {
+	padding: 0 10px 0 10px;
+	width: 230px;
+	margin: 0 10px 0 10px;
+}
+input :focus {
+	outline: none;
+}
+.input-container {
+	margin: 10px 0 20px 0;
+}

@@ -1,0 +1,27 @@
+.topbar-container {
+	display: flex;
+	justify-content: space-between;
+	-webkit-app-region: drag;
+	background-color: #252839;
+	height: 100%;
+	width: 100%;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+	color: white;
+}
+.topbar-left {
+	display: flex;
+	justify-content: flex-start;
+}
+.topbar-right {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.topbar-title {
+	font-size: 25px;
+	height: 100%;
+	border: 0;
+	border-radius: 2px;
+	display: flex;
+	align-items: center;
+}

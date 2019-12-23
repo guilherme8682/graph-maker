@@ -1,0 +1,63 @@
+{
+	"description": "Simple app to create and customize a map graph representation.",
+	"author": "Guilherme Rocha",
+	"main": "public/electron.js",
+	"homepage": "./",
+	"name": "graph-maker-2",
+	"version": "2.1.0",
+	"private": true,
+	"scripts": {
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"react-start": "react-scripts start",
+		"react-build": "react-scripts build",
+		"react-test": "react-scripts test --env=jsdom",
+		"react-eject": "react-scripts eject",
+		"electron-build": "electron-builder",
+		"release": "npm run react-build && electron-builder --publish=always",
+		"build": "npm run react-build && npm run electron-build",
+		"start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
+	},
+	"dependencies": {
+		"@types/jest": "24.0.23",
+		"@types/node": "12.12.11",
+		"@types/react": "16.9.11",
+		"@types/react-dom": "16.9.4",
+		"concurrently": "^5.0.2",
+		"cross-env": "^6.0.3",
+		"react": "^16.12.0",
+		"react-dom": "^16.12.0",
+		"react-draggable": "^4.2.0",
+		"react-scripts": "^3.3.0",
+		"typesafe-actions": "^5.1.0",
+		"typescript": "3.7.2",
+		"wait-on": "^3.3.0"
+	},
+	"devDependencies": {
+		"electron": "^7.1.7",
+		"electron-builder": "^21.2.0",
+		"electron-is-dev": "^1.1.0"
+	},
+	"build": {
+		"appId": "com.graphmaker",
+		"win": {
+			"target": "portable",
+			"icon": "src/pages/home/topbar/appicon/img/logo.ico"
+		}
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}

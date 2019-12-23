@@ -1,0 +1,14 @@
+.middle-container {
+	background-color: #f2b632;
+	height: 100%;
+	width: 100%;
+	box-shadow: 0 25px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.middle-container {
+	padding: 20px 0 20px 0;
+}
+
+.middle-subcontainer {
+	margin: 0 20px 0 20px;
+}

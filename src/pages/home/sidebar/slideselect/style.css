@@ -1,0 +1,31 @@
+.slideselect-options-container {
+	width: 100%;
+}
+.slideselect-option {
+	height: 30px;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	text-decoration: underline;
+	color: white;
+	transition: all 0.2s;
+}
+
+.slideselect-selected {
+	height: 30px;
+	width: 100%;
+	position: relative;
+	background-color: rgba(255, 255, 255, 0.25);
+	border-radius: 10px;
+	transition: all 0.2s;
+}
+
+.slideselect-title {
+	font-weight: bold;
+}
+
+.slideselect-option:active {
+	font-size: 15px;
+}

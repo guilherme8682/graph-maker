@@ -1,0 +1,26 @@
+.sidebar-container {
+	background-color: #f2b632;
+	width: 250px;
+	height: 100%;
+	box-shadow: 0 25px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+.sidebar-subcontainer {
+	margin: 10px 30px 10px 30px;
+	display: grid;
+	grid-template-columns: 100%;
+	grid-gap: 15px;
+}
+.sidebar-title {
+	display: flex;
+	align-items: center;
+	font-weight: normal;
+}
+.sidebar-title .material-icons {
+	font-family: 'Material Icons';
+	font-style: normal;
+	font-size: 23px;
+}
+.sidebar-title-text {
+	font-size: 30px;
+	font-weight: bolder;
+}

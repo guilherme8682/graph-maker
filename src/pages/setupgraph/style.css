@@ -1,0 +1,16 @@
+.setupgraph-container {
+	width: 350px;
+	height: 500px;
+}
+.topbar {
+	width: 100%;
+	height: 65px;
+}
+.middledata {
+	width: 100%;
+	height: calc(100% - 130px);
+}
+.bottombar {
+	width: 100%;
+	height: 65px;
+}
