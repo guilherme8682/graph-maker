@@ -81,9 +81,15 @@ export class TopBar extends Component<Pops> {
 				<div className='topbar-left'>
 					<AppLogo />
 					<div className='topbar-title'>Graph maker</div>
-					<Button icon='insert_drive_file' onClick={openGraphSetup} />
-					<ButtonReadFile />
-					<Button icon='save' onClick={this.saveFile} />
+					<span title='New graph map'>
+						<Button icon='insert_drive_file' onClick={openGraphSetup} />
+					</span>
+					<span title='Open images or graph.json'>
+						<ButtonReadFile />
+					</span>
+					<span title='Save graph map'>
+						<Button icon='save' onClick={this.saveFile} />
+					</span>
 					<Input
 						placeholder='Choose a name'
 						value={graphName}

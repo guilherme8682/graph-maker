@@ -1,16 +1,16 @@
 const { app, BrowserWindow } = require('electron')
 const { join } = require('path')
-// const isDev = require('electron-is-dev')
 
-let mainWindow
+app.on('ready', createWindow)
+
 function createWindow() {
-	mainWindow = new BrowserWindow({
+	const mainWindow = new BrowserWindow({
+		minHeight: 730,
+		minWidth: 916,
 		width: 916,
 		height: 730,
 		resizable: true,
 		frame: false,
-		minHeight: 730,
-		minWidth: 916,
 		webPreferences: {
 			nodeIntegration: true,
 		},
@@ -20,14 +20,3 @@ function createWindow() {
 	)
 	// mainWindow.webContents.toggleDevTools()
 }
-app.on('ready', createWindow)
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit()
-	}
-})
-app.on('activate', () => {
-	if (mainWindow === null) {
-		createWindow()
-	}
-})

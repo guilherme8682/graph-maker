@@ -82,7 +82,7 @@ export class SideBar extends Component {
 						}
 						label='Obstacle intensity'
 						value={obstacleIntensity}
-						onChange={v => this.setObstacleIntensity(v)}
+						onChange={this.setObstacleIntensity}
 					/>
 					<InfoField label='Path size' value={pathSize} />
 					<InfoField label='Path cost' value={pathCost} />

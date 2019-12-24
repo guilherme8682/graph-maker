@@ -2,18 +2,18 @@ import { EventEmitter } from 'events'
 import { SearchMethod, DrawingMethod } from './GraphController'
 import { log } from './Utils'
 
-class State<T> {
+class State<T extends State<T>> {
 	static readonly all = '*'
 	private readonly emitter: EventEmitter
 
 	constructor(oldState?: State<T>) {
 		this.emitter = oldState ? oldState.emitter : new EventEmitter()
-		return new Proxy(this, { set: this.set })
+		return new Proxy(this, { set: this.set as any })
 	}
-	private set = (self: any, prop: keyof T, value: any) => {
+	private set(self: T, prop: keyof T, value: any) {
 		if (self[prop] === value) return true
 		self[prop] = value
-		this.dispatch([State.all as keyof T, prop])
+		self.dispatch([State.all as keyof T, prop])
 		log(`[] ${prop}: ${value}`)
 		return true
 	}

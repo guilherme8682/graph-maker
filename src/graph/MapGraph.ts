@@ -194,10 +194,27 @@ export class MapGraph {
 	private setDestinationPoint(event: MouseEvent) {
 		graphState.endPath = this.indexFromClick(event)
 	}
-	setValueForVertice(event?: MouseEvent, index?: number, v?: number) {
+	private proccesSearch = () => {
+		this.clearL3()
+		if (!graphState.isSearchEnable) {
+			graphState.pathSize = -1
+			graphState.pathCost = -1
+			graphState.numberVisisted = -1
+			return
+		}
+		log('!! Searching...')
+		const { route, visited } = this.currentSearch()
+		this.drawBlocks(visited)
+		this.drawRoute(route)
+		graphState.pathSize = route.length
+		graphState.pathCost = route.reduce((before, current) => before + this.costVerts[current], 0)
+		graphState.numberVisisted = visited.length
+	}
+	setValueForVertice(event: MouseEvent) {
+		this.setValueForVerticeI(this.indexFromClick(event), graphState.obstacleIntensity)
+	}
+	setValueForVerticeI(i: number, value: number) {
 		const { numberOfBlocksPerLine: nbpl, numberOfBlocks: nb, costVerts: cv, graph: g } = this
-		const i = index !== undefined ? index : this.indexFromClick(event!)
-		const value = v !== undefined ? v : graphState.obstacleIntensity
 		const column = i % nbpl
 		cv[i] = value
 		if (i >= nbpl && i < nb - nbpl) {
@@ -243,22 +260,6 @@ export class MapGraph {
 		this.drawBlock(i, this.getColor(i), 0)
 		this.proccesSearch()
 		graphState.graphVersionUpdate++
-	}
-	private proccesSearch = () => {
-		this.clearL3()
-		if (!graphState.isSearchEnable) {
-			graphState.pathSize = -1
-			graphState.pathCost = -1
-			graphState.numberVisisted = -1
-			return
-		}
-		log('!! Searching...')
-		const { route, visited } = this.currentSearch()
-		this.drawBlocks(visited)
-		this.drawRoute(route)
-		graphState.pathSize = route.length
-		graphState.pathCost = route.reduce((before, current) => before + this.costVerts[current], 0)
-		graphState.numberVisisted = visited.length
 	}
 	refreshScreen() {
 		const [canvas] = GraphComponents.canvas

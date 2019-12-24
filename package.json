@@ -7,24 +7,19 @@
 	"version": "2.1.0",
 	"private": true,
 	"scripts": {
-		"test": "react-scripts test",
-		"eject": "react-scripts eject",
-		"react-start": "react-scripts start",
-		"react-build": "react-scripts build",
-		"react-test": "react-scripts test --env=jsdom",
-		"react-eject": "react-scripts eject",
-		"electron-build": "electron-builder",
-		"release": "npm run react-build && electron-builder --publish=always",
-		"build": "npm run react-build && npm run electron-build",
-		"start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
+		"react:start": "react-scripts start",
+		"react:build": "react-scripts build",
+		"react:test": "react-scripts test --env=jsdom",
+		"react:eject": "react-scripts eject",
+		"electron:builder": "electron-builder",
+		"electron:release": "npm run react:build && electron-builder --publish=always",
+		"electron:build": "npm run react:build && npm run electron:builder",
+		"electron:start": "concurrently \"cross-env BROWSER=none npm run react:start\" \"wait-on http://localhost:3000 && electron .\""
 	},
 	"dependencies": {
-		"@types/jest": "24.0.23",
-		"@types/node": "12.12.11",
-		"@types/react": "16.9.11",
-		"@types/react-dom": "16.9.4",
 		"concurrently": "^5.0.2",
 		"cross-env": "^6.0.3",
+		"jimp": "^0.9.3",
 		"react": "^16.12.0",
 		"react-dom": "^16.12.0",
 		"react-draggable": "^4.2.0",
@@ -34,6 +29,10 @@
 		"wait-on": "^3.3.0"
 	},
 	"devDependencies": {
+		"@types/jest": "24.0.23",
+		"@types/node": "12.12.11",
+		"@types/react": "16.9.11",
+		"@types/react-dom": "16.9.4",
 		"electron": "^7.1.7",
 		"electron-builder": "^21.2.0",
 		"electron-is-dev": "^1.1.0"
