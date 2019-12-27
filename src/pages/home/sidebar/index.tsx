@@ -7,10 +7,10 @@ import { SlideBar } from './slidebar'
 import { GraphState } from '../../../controller/State'
 import { SlideSelect } from './slideselect'
 
-const searchMethodsKeys = Object.keys(SearchMethod)
-const searchMethodsValues = Object.values(SearchMethod) as SearchMethod[]
-const drawingMethodsKeys = Object.keys(DrawingMethod)
-const drawingMethodsValues = Object.values(DrawingMethod) as DrawingMethod[]
+const searchMethods = Object.values(SearchMethod)
+const searchMethodsLabels = ['Dijkstra', 'First Breadth', 'First Greedy', 'A*']
+const drawingMethods = Object.values(DrawingMethod)
+const drawingMethodsLabels = ['Start Point', 'End Point', 'Intensity Point']
 const listenProps: (keyof GraphState)[] = [
 	'searchMethod',
 	'isSearchEnable',
@@ -30,11 +30,11 @@ export class SideBar extends Component {
 	update = () => {
 		this.forceUpdate()
 	}
-	setSearchMethod = (option: number) => {
-		graphState.searchMethod = searchMethodsValues[option]
+	setSearchMethod = (option: SearchMethod) => {
+		graphState.searchMethod = option
 	}
-	setDrawingMethod = (option: number) => {
-		graphState.drawingMethod = drawingMethodsValues[option]
+	setDrawingMethod = (option: DrawingMethod) => {
+		graphState.drawingMethod = option
 	}
 	findPath = () => {
 		graphState.isSearchEnable = !graphState.isSearchEnable
@@ -65,15 +65,17 @@ export class SideBar extends Component {
 					</div>
 					<SlideSelect
 						label='Search mode'
-						options={searchMethodsKeys}
-						selected={searchMethodsValues.indexOf(searchMethod)}
+						options={searchMethods}
+						optionLabels={searchMethodsLabels}
+						selected={searchMethod}
 						onChange={this.setSearchMethod}
 					/>
 					<Button label={isSearchEnable ? 'Stop' : 'Find'} onClick={this.findPath} />
 					<SlideSelect
 						label='Drawing mode'
-						options={drawingMethodsKeys}
-						selected={drawingMethodsValues.indexOf(drawingMethod)}
+						options={drawingMethods}
+						optionLabels={drawingMethodsLabels}
+						selected={drawingMethod}
 						onChange={this.setDrawingMethod}
 					/>
 					<SlideBar

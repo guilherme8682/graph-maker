@@ -1,20 +1,21 @@
 import './style.css'
 import React, { Component } from 'react'
 
-interface Props {
+interface Props<T extends string> {
 	label: string
-	options: string[]
-	selected: number
-	onChange?: ((option: number) => void) | undefined
+	options: T[]
+	optionLabels?: string[]
+	selected: T
+	onChange?(option: T): void
 }
-export class SlideSelect extends Component<Props> {
+export class SlideSelect<T extends string> extends Component<Props<T>> {
 	state = {
 		selected: 0,
 		clicked: false,
 	}
-	componentWillReceiveProps(nextProps: Readonly<Props>) {
-		const { selected } = nextProps
-		this.setState({ selected })
+	componentWillReceiveProps(nextProps: Readonly<Props<T>>) {
+		const { selected, options } = nextProps
+		this.setState({ selected: options.indexOf(selected) })
 	}
 	onMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
 		if (!this.state.clicked) return
@@ -26,27 +27,34 @@ export class SlideSelect extends Component<Props> {
 		)
 			return
 		this.setState({ selected })
-		const { onChange } = this.props
-		if (onChange) onChange(selected)
+		const { onChange, options } = this.props
+		if (onChange) onChange(options[selected])
 	}
-	changeSelected = (selected: number) => {
+	changeSelected = (selected: T) => {
 		return () => {
-			this.setState({ selected })
-			const { onChange } = this.props
+			const { options, onChange } = this.props
+			this.setState({ selected: options.indexOf(selected) })
 			if (onChange) onChange(selected)
 		}
 	}
+	setClicked = () => {
+		this.setState({ clicked: true })
+	}
+	setNotClicked = () => {
+		this.setState({ clicked: false })
+	}
 	render() {
-		const { label, options } = this.props
+		const { label, options, optionLabels } = this.props
 		const { selected } = this.state
+		const labels = optionLabels || options
 		return (
 			<div className='slideselect-container'>
 				<div className='slideselect-title'>{label}:</div>
 				<div
-					onMouseDown={() => this.setState({ clicked: true })}
-					onMouseUp={() => this.setState({ clicked: false })}
+					onMouseDown={this.setClicked}
+					onMouseUp={this.setNotClicked}
 					onMouseMove={this.onMouseMove}
-					onMouseLeave={() => this.setState({ clicked: false })}
+					onMouseLeave={this.setNotClicked}
 				>
 					<div className='slideselect-options-container'>
 						<div style={{ height: 0 }}>
@@ -59,9 +67,9 @@ export class SlideSelect extends Component<Props> {
 							<div
 								className='slideselect-option'
 								key={i}
-								onClick={this.changeSelected(i)}
+								onClick={this.changeSelected(o)}
 							>
-								{o}
+								{labels[i]}
 							</div>
 						))}
 					</div>

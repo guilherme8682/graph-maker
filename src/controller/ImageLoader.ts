@@ -11,7 +11,7 @@ export async function loadImagGraph(path: string) {
 	for (let i = 0; i < size; ++i) {
 		for (let j = 0; j < size; ++j) {
 			const { r } = intToRGBA(img.getPixelColor(j, i))
-			GraphController.map.setValueForVerticeI(index++, 255 - r)
+			GraphController.map.setValueForVerticeI(index++, 255 - r, false)
 		}
 	}
 }

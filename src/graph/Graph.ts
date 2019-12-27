@@ -1,6 +1,6 @@
 const { sqrt, floor, ceil, abs } = Math
 
-const INFINITY = 255
+export const INFINITY = 255
 export const GRAPH_MAX_SIZE = 2 ** 30
 
 export class Graph {

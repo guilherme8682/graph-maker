@@ -1,4 +1,4 @@
-import { Graph } from './Graph'
+import { Graph, INFINITY } from './Graph'
 import { graphState, GraphComponents } from '../controller/GraphController'
 import { log } from '../controller/Utils'
 import { GraphState } from '../controller/State'
@@ -207,13 +207,19 @@ export class MapGraph {
 		this.drawBlocks(visited)
 		this.drawRoute(route)
 		graphState.pathSize = route.length
-		graphState.pathCost = route.reduce((before, current) => before + this.costVerts[current], 0)
+		if (route.length === 0 || route.includes(INFINITY)) {
+			graphState.pathCost = -1
+			graphState.pathSize = -1
+		} else {
+			graphState.pathCost = route.reduce((acc, c) => acc + this.costVerts[c], 0)
+			graphState.pathSize = route.length
+		}
 		graphState.numberVisisted = visited.length
 	}
 	setValueForVertice(event: MouseEvent) {
 		this.setValueForVerticeI(this.indexFromClick(event), graphState.obstacleIntensity)
 	}
-	setValueForVerticeI(i: number, value: number) {
+	setValueForVerticeI(i: number, value: number, fireStateListeners = true) {
 		const { numberOfBlocksPerLine: nbpl, numberOfBlocks: nb, costVerts: cv, graph: g } = this
 		const column = i % nbpl
 		cv[i] = value
@@ -259,7 +265,7 @@ export class MapGraph {
 		}
 		this.drawBlock(i, this.getColor(i), 0)
 		this.proccesSearch()
-		graphState.graphVersionUpdate++
+		if (fireStateListeners) graphState.graphVersionUpdate++
 	}
 	refreshScreen() {
 		const [canvas] = GraphComponents.canvas
@@ -289,5 +295,28 @@ export class MapGraph {
 		delete this.graph
 		graphState.stopListen(this.proccesSearch, processSearchListenProps)
 		graphState.stopListen(this.drawL2, drawL2ListenProps)
+	}
+	toImageString() {
+		const res = Math.sqrt(this.numberOfBlocks)
+		const canvas = document.createElement('canvas')!
+		const ctx = canvas.getContext('2d')!
+		const data = new Uint8ClampedArray(this.costVerts.length * 4)
+		this.costVerts.forEach((gray, index) => {
+			const i = index * 4
+			const l = i + 3
+			data.fill(255 - gray, i, l)
+			data[l] = 255
+		})
+		for (const [gray, index] of this.costVerts.entries()) {
+			const i = index * 4
+			const l = i + 3
+			data.fill(255 - gray, i, l)
+			data[l] = 255
+		}
+		const img = new ImageData(data, res, res)
+		ctx.canvas.height = res
+		ctx.canvas.width = res
+		ctx.putImageData(img, 0, 0)
+		return canvas.toDataURL()
 	}
 }

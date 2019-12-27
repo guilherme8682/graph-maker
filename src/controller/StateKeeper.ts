@@ -1,5 +1,6 @@
 import { GraphController, graphState, GraphMakerJSONStructure } from './GraphController'
 import { log } from './Utils'
+import { loadImagGraph } from './ImageLoader'
 
 const UPDATE_TIME_MS = 1000
 const LOCALSTORAGE_PATH = 'GraphMakerState'
@@ -49,15 +50,22 @@ export class StateKeeper {
 		log(`-> Backup was made in ${elapsedTime}ms`)
 	}
 	async restore(): Promise<boolean> {
-		const start = new Date()
-		let stateString = localStorage.getItem(LOCALSTORAGE_PATH)
-		if (!stateString) {
-			stateString = await (await fetch('Smile.json')).text()
+		try {
+			const start = new Date()
+			let stateString = localStorage.getItem(LOCALSTORAGE_PATH)
+			if (!stateString) {
+				await loadImagGraph('smile.png')
+				return true
+			}
+			GraphController.loadGraphFile(stateString)
+			const elapsedTime = new Date().getTime() - start.getTime()
+			log(`<- Restore was made in ${elapsedTime}ms`)
+		} catch (err) {
+			console.error(err)
+			return false
+		} finally {
+			return true
 		}
-		GraphController.loadGraphFile(stateString)
-		const elapsedTime = new Date().getTime() - start.getTime()
-		log(`<- Restore was made in ${elapsedTime}ms`)
-		return true
 	}
 	graphToString() {
 		const data = JSON.parse(JSON.stringify(graphState))

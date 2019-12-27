@@ -20,6 +20,7 @@ export interface GraphMakerJSONStructure {
 }
 
 export let graphState = new GraphState()
+;(window as any).graphState = graphState
 
 export class GraphController {
 	static map: MapGraph
@@ -27,6 +28,7 @@ export class GraphController {
 	static resetGraph(graphMaker?: GraphMakerJSONStructure) {
 		if (graphMaker) {
 			Object.assign(graphState, graphMaker.graphState)
+			if (this.map) this.map.destruct()
 			this.map = new MapGraph(graphMaker.pajek)
 		} else {
 			const { newSize } = graphState
@@ -68,3 +70,5 @@ export class GraphComponents {
 	static ctx = [] as CanvasRenderingContext2D[]
 	static stateKeeper = new StateKeeper()
 }
+
+;(window as any).GraphController = GraphController
