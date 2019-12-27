@@ -206,7 +206,6 @@ export class MapGraph {
 		const { route, visited } = this.currentSearch()
 		this.drawBlocks(visited)
 		this.drawRoute(route)
-		graphState.pathSize = route.length
 		if (route.length === 0 || route.includes(INFINITY)) {
 			graphState.pathCost = -1
 			graphState.pathSize = -1
@@ -307,12 +306,6 @@ export class MapGraph {
 			data.fill(255 - gray, i, l)
 			data[l] = 255
 		})
-		for (const [gray, index] of this.costVerts.entries()) {
-			const i = index * 4
-			const l = i + 3
-			data.fill(255 - gray, i, l)
-			data[l] = 255
-		}
 		const img = new ImageData(data, res, res)
 		ctx.canvas.height = res
 		ctx.canvas.width = res
