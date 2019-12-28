@@ -22,7 +22,7 @@ export class SquareRootInput extends Component<Props> {
 		if (size ** 2 > GRAPH_MAX_SIZE) size = sqrt(GRAPH_MAX_SIZE)
 		const value = round(sqrt(size)) ** 2
 		this.setState({ value })
-		graphState.newSize = value
+		graphState.nextSize = value
 	}
 	onBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const size = Number(event.target.value)

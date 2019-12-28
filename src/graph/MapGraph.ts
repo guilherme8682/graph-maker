@@ -3,7 +3,7 @@ import { graphState, GraphComponents } from '../controller/GraphController'
 import { log } from '../controller/Utils'
 import { GraphState } from '../controller/State'
 
-const { floor, random, ceil, sqrt } = Math
+const { floor, random, round, ceil, sqrt } = Math
 
 const drawL2ListenProps: (keyof GraphState)[] = ['originPath', 'endPath']
 const processSearchListenProps: (keyof GraphState)[] = [
@@ -13,7 +13,7 @@ const processSearchListenProps: (keyof GraphState)[] = [
 	'searchMethod',
 ]
 export const intensity = {
-	max: 255,
+	max: INFINITY,
 	min: 0,
 }
 
@@ -137,8 +137,8 @@ export class MapGraph {
 		const { max } = intensity
 		const cost = this.costVerts[i]
 		if (cost === max) return 'rgb(37, 40, 57)'
-		const blue = this.costVerts[i] === max ? 0 : floor(((max - cost) / max) * 255)
-		const green = ceil(0.68 * blue) + 173
+		const blue = max - cost
+		const green = round(0.68 * blue) + 173
 		return `rgb(255, ${green}, ${blue})`
 	}
 	private drawL1() {

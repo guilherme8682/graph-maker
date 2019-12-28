@@ -5,7 +5,7 @@ export async function loadImagGraph(path: string) {
 	let img = await read(path)
 	const size = Math.min(img.getHeight(), img.getWidth(), 50)
 	img.resize(size, size).grayscale()
-	graphState.newSize = size ** 2
+	graphState.nextSize = size ** 2
 	GraphController.resetGraph()
 	let index = 0
 	for (let i = 0; i < size; ++i) {

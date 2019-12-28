@@ -61,7 +61,7 @@ export class SlideSelect<T extends string> extends Component<Props<T>> {
 							<div
 								className='slideselect-selected'
 								style={{ top: selected * 30 + 'px' }}
-							></div>
+							/>
 						</div>
 						{options.map((o, i) => (
 							<div

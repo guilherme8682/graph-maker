@@ -13,23 +13,26 @@ class State<T extends State<T>> {
 	private set(self: T, prop: keyof T, value: any) {
 		if (self[prop] === value) return true
 		self[prop] = value
-		self.dispatch([State.all as keyof T, prop])
 		log(`[] ${prop}: ${value}`)
+		self.dispatch([State.all as keyof T, prop])
 		return true
 	}
-	private dispatch(props: (keyof T)[] = [State.all as keyof T]) {
+	private dispatch(props = [State.all as keyof T]) {
 		props.forEach(p => this.emitter.emit(p as string))
+
+		const p = props as string[]
+		p.forEach(this.emitter.emit)
 	}
-	listen(listener: () => void, props: (keyof T)[] = [State.all as keyof T]) {
+	listen(listener: () => void, props = [State.all as keyof T]) {
 		props.forEach(p => this.emitter.addListener(p as string, listener))
 	}
-	stopListen(listener: () => void, props: (keyof T)[] = [State.all as keyof T]) {
+	stopListen(listener: () => void, props = [State.all as keyof T]) {
 		props.forEach(p => this.emitter.removeListener(p as string, listener))
 	}
 }
-
 export class GraphState extends State<GraphState> {
-	newSize = 1024
+	/** Saves the size of a graph that will be created */
+	nextSize = 1024
 	obstacleIntensity = 0
 	graphName = ''
 	searchMethod = SearchMethod.Dijkstra

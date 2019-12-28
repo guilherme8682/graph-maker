@@ -21,7 +21,7 @@ export class ButtonReadFile extends Component {
 		} else if (imagesSupported.includes(ext)) {
 			reader.readAsDataURL(file)
 			await new Promise(r => (reader.onload = r))
-			loadImagGraph(reader.result as string)
+			await loadImagGraph(reader.result as string)
 		}
 		const a = document.getElementById('file-selector') as HTMLInputElement
 		a.value = ''
@@ -34,7 +34,7 @@ export class ButtonReadFile extends Component {
 					id='file-selector'
 					type='file'
 					onChange={this.loadFile}
-				></input>
+				/>
 				<label htmlFor='file-selector'>
 					<Button icon='folder_open' />
 				</label>

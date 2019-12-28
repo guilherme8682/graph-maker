@@ -14,7 +14,7 @@ export class MiddleData extends Component<Props> {
 				<div className='middle-subcontainer'>
 					<SquareRootInput
 						label='Size'
-						defaultValue={graphState.newSize}
+						defaultValue={graphState.nextSize}
 						onEnter={this.props.onEnter}
 					/>
 					<Warning message='Size value must be a square root valid' />

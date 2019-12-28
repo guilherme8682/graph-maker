@@ -32,15 +32,15 @@ export class Graph extends Component {
 	render() {
 		return (
 			<div className='graph-container' id='graph-container'>
-				<canvas className='graph-canvas'></canvas>
-				<canvas className='graph-canvas'></canvas>
+				<canvas className='graph-canvas'/>
+				<canvas className='graph-canvas'/>
 				<canvas
 					className='graph-canvas'
 					onMouseDown={() => this.setClick(true)}
 					onMouseUp={() => this.setClick(false)}
 					onMouseMove={this.onMouseMove}
 					onClick={this.onClick}
-				></canvas>
+				/>
 			</div>
 		)
 	}

@@ -31,10 +31,10 @@ export class GraphController {
 			if (this.map) this.map.destruct()
 			this.map = new MapGraph(graphMaker.pajek)
 		} else {
-			const { newSize } = graphState
-			graphState = new GraphState(newSize - 1, graphState)
+			const { nextSize } = graphState
+			graphState = new GraphState(nextSize - 1, graphState)
 			if (this.map) this.map.destruct()
-			this.map = new MapGraph(newSize)
+			this.map = new MapGraph(nextSize)
 		}
 		graphState.graphVersionUpdate++
 	}

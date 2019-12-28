@@ -40,13 +40,6 @@ export class TopBar extends Component<Pops> {
 		a.click()
 		window.URL.revokeObjectURL(url)
 	}
-	toggleFullscreen = () => {
-		if (!document.fullscreenElement) {
-			document.body.requestFullscreen()
-		} else {
-			document.exitFullscreen()
-		}
-	}
 	minimize = () => {
 		remote.getCurrentWindow().minimize()
 	}
@@ -70,7 +63,6 @@ export class TopBar extends Component<Pops> {
 				<Button key={3} icon='close' onClick={this.close} />,
 			)
 		}
-
 		return <div className='topbar-right'>{buttons}</div>
 	}
 	render() {

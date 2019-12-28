@@ -14,7 +14,7 @@ export class BottomBar extends Component<Props> {
 	render() {
 		return (
 			<div className='botbar-container'>
-				<div className='botbar-left'></div>
+				<div className='botbar-left'/>
 				<div className='botbar-right'>
 					<Button icon='arrow_forward' onClick={this.confirm} />
 				</div>
