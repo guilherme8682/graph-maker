@@ -30,12 +30,15 @@ export class SlideSelect<T extends string> extends Component<Props<T>> {
 		const { onChange, options } = this.props
 		if (onChange) onChange(options[selected])
 	}
-	changeSelected = (selected: T) => {
-		return () => {
+	changeSelectedListeners = {} as { [i: string]: () => void }
+	changeSelected(selected: T) {
+		const listener = this.changeSelectedListeners[selected]
+		if (listener) return listener
+		return (this.changeSelectedListeners[selected] = () => {
 			const { options, onChange } = this.props
 			this.setState({ selected: options.indexOf(selected) })
 			if (onChange) onChange(selected)
-		}
+		})
 	}
 	setClicked = () => {
 		this.setState({ clicked: true })

@@ -12,11 +12,11 @@ export class SlideBar extends Component<Props> {
 	state = {
 		value: 0,
 	}
+
 	componentWillReceiveProps(nextProps: Readonly<Props>) {
 		const { value } = nextProps
 		this.setState({ value })
 	}
-
 	normaliaze(value: number) {
 		if (value > intensity.max) value = intensity.max
 		if (value < intensity.min) value = intensity.min

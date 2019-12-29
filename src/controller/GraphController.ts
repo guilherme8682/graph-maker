@@ -20,7 +20,6 @@ export interface GraphMakerJSONStructure {
 }
 
 export let graphState = new GraphState()
-;(window as any).graphState = graphState
 
 export class GraphController {
 	static map: MapGraph
@@ -70,5 +69,3 @@ export class GraphComponents {
 	static ctx = [] as CanvasRenderingContext2D[]
 	static stateKeeper = new StateKeeper()
 }
-
-;(window as any).GraphController = GraphController

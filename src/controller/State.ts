@@ -3,30 +3,29 @@ import { SearchMethod, DrawingMethod } from './GraphController'
 import { log } from './Utils'
 
 class State<T extends State<T>> {
-	static readonly all = '*'
 	private readonly emitter: EventEmitter
 
 	constructor(oldState?: State<T>) {
-		this.emitter = oldState ? oldState.emitter : new EventEmitter()
+		this.emitter = oldState?.emitter || new EventEmitter()
 		return new Proxy(this, { set: this.set as any })
 	}
 	private set(self: T, prop: keyof T, value: any) {
 		if (self[prop] === value) return true
 		self[prop] = value
 		log(`[] ${prop}: ${value}`)
-		self.dispatch([State.all as keyof T, prop])
+		self.dispatch([...self.all, prop])
 		return true
 	}
-	private dispatch(props = [State.all as keyof T]) {
-		props.forEach(p => this.emitter.emit(p as string))
-
-		const p = props as string[]
-		p.forEach(this.emitter.emit)
+	private get all() {
+		return ['*' as keyof T]
 	}
-	listen(listener: () => void, props = [State.all as keyof T]) {
+	private dispatch(props = this.all) {
+		props.forEach(p => this.emitter.emit(p as string))
+	}
+	listen(listener: () => void, props = this.all) {
 		props.forEach(p => this.emitter.addListener(p as string, listener))
 	}
-	stopListen(listener: () => void, props = [State.all as keyof T]) {
+	stopListen(listener: () => void, props = this.all) {
 		props.forEach(p => this.emitter.removeListener(p as string, listener))
 	}
 }
