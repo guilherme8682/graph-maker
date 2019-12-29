@@ -1,8 +1,8 @@
 {
+	"homepage": "http://guilherme8482.github.io/graph-maker",
 	"description": "Simple app to create and customize a map graph representation.",
 	"author": "Guilherme Rocha",
 	"main": "public/electron.js",
-	"homepage": "./",
 	"name": "graph-maker-2",
 	"version": "2.1.0",
 	"private": true,
@@ -14,7 +14,9 @@
 		"electron:builder": "electron-builder",
 		"electron:release": "npm run react:build && electron-builder --publish=always",
 		"electron:build": "npm run react:build && npm run electron:builder",
-		"electron:start": "concurrently \"cross-env BROWSER=none npm run react:start\" \"wait-on http://localhost:3000 && electron .\""
+		"electron:start": "concurrently \"cross-env BROWSER=none npm run react:start\" \"wait-on http://localhost:3000 && electron .\"",
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d build"
 	},
 	"dependencies": {
 		"concurrently": "^5.0.2",
@@ -35,7 +37,8 @@
 		"@types/react-dom": "16.9.4",
 		"electron": "^7.1.7",
 		"electron-builder": "^21.2.0",
-		"electron-is-dev": "^1.1.0"
+		"electron-is-dev": "^1.1.0",
+		"gh-pages": "^2.1.1"
 	},
 	"build": {
 		"appId": "com.graphmaker",

@@ -6,11 +6,9 @@ import { AppLogo } from './appicon'
 import { ButtonReadFile } from './readfile'
 import { graphState, GraphComponents } from '../../../controller/GraphController'
 import { isInBrowser } from '../../../controller/Utils'
-import { Remote } from 'electron'
 
-let remote: Remote
-if (!isInBrowser) {
-	remote = (window as any).require('electron').remote
+async function getRemote() {
+	return (await import('electron')).remote
 }
 
 interface Pops {
@@ -40,19 +38,22 @@ export class TopBar extends Component<Pops> {
 		a.click()
 		window.URL.revokeObjectURL(url)
 	}
-	minimize = () => {
+	async minimize() {
+		const remote = await getRemote()
 		remote.getCurrentWindow().minimize()
 	}
-	close = () => {
+	async close() {
+		const remote = await getRemote()
 		remote.getCurrentWindow().close()
 	}
-	fullscreen = () => {
+	async fullscreen() {
+		const remote = await getRemote()
 		const win = remote.getCurrentWindow()
 		const isFullscreen = win.isFullScreen()
 		win.setFullScreen(!isFullscreen)
 	}
 	openGitHub = () => {
-		window.open('https://github.com/Guilherme8482/GraphMaker')
+		window.open('https://github.com/Guilherme8482/graph-maker')
 	}
 	electronWindowActions() {
 		const buttons = [<Button key={0} icon='info_outline' onClick={this.openGitHub} />]
