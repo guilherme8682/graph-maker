@@ -15,7 +15,7 @@
 		"electron:release": "npm run react:build && electron-builder --publish=always",
 		"electron:build": "npm run react:build && npm run electron:builder",
 		"electron:start": "concurrently \"cross-env BROWSER=none npm run react:start\" \"wait-on http://localhost:3000 && electron .\"",
-		"predeploy": "npm run build",
+		"predeploy": "npm run react:build",
 		"deploy": "gh-pages -d build"
 	},
 	"dependencies": {
