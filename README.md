@@ -1,8 +1,9 @@
 # Graph Maker
-Desktop applicaton to manage and visualize graph structures. Made with React + TypeScript + NodeJS + Electron
+Desktop applicaton to manage and visualize graph structures. Made with React + TypeScript + NodeJS + Electron and more.
 
 ### Portable version
-* [Windows 32/64 bit v1.0](https://github.com/Guilherme8482/GraphMaker/raw/master/dist/graph-maker-2%202.1.0.exe)
+* [Web App v2.0](https://guilherme8482.github.io/graph-maker/)
+* [Windows x86 v2.0](https://github.com/Guilherme8482/GraphMaker/raw/master/dist/graph-maker-2%202.1.0.exe)
 
 ### Description
 An application developed in the classroom to prove how useful search methods are in graph theory, and this can be seen by creating a map that under the hood contains a graph and provides the best possible way to move from point to another.
